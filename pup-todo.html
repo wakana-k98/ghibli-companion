@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mochi's To-Do</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --ground:    #ECC96C;
+  --surface:   #FAF1DD;
+  --text:      #2C1A08;
+  --muted:     #8A6030;
+  --accent:    #4D7EC2;
+  --walk:      #50A340;
+  --walk-bg:   rgba(80,163,64,0.14);
+  --walk-fg:   #2D7020;
+  --feed:      #D96820;
+  --feed-bg:   rgba(217,104,32,0.14);
+  --feed-fg:   #A04010;
+  --danger:    #C04040;
+  --border:    rgba(44,26,8,0.12);
+  --shadow:    0 3px 16px rgba(44,26,8,0.10);
+  --rLg:       22px;
+  --rSm:       14px;
+  --rPill:     100px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--ground);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.22) 1px, transparent 1px);
+  background-size: 18px 18px;
+  color: var(--text);
+  font-family: 'Nunito', system-ui, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem 1rem 4rem;
+}
+
+.app {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Header ─────────────────────────────── */
+.site-title {
+  text-align: center;
+  padding: 0.25rem 0 0.5rem;
+}
+.site-title h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.site-title .byline {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* ── Dog card ────────────────────────────── */
+.dog-card {
+  background: var(--surface);
+  border-radius: var(--rLg);
+  padding: 1.5rem 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+}
+
+.dog-stage {
+  height: 190px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+#dog-svg {
+  width: 190px;
+  height: 190px;
+  overflow: visible;
+}
+
+.dog-mood-text {
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  min-height: 1.5em;
+  color: var(--text);
+  transition: color 0.3s;
+}
+
+/* ── Dog animations ───────────────────────── */
+@keyframes dog-bounce {
+  0%   { transform: translateY(0) rotate(0deg); }
+  18%  { transform: translateY(-24px) rotate(-6deg); }
+  36%  { transform: translateY(-10px) rotate(4deg); }
+  55%  { transform: translateY(-18px) rotate(-3deg); }
+  74%  { transform: translateY(-5px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes tail-wag {
+  0%   { transform: rotate(-28deg); }
+  50%  { transform: rotate(28deg); }
+  100% { transform: rotate(-28deg); }
+}
+
+.dog-bouncing #dog-svg {
+  animation: dog-bounce 0.7s cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+#tail-group {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+}
+.tail-wagging #tail-group {
+  animation: tail-wag 0.22s ease-in-out 5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dog-bouncing #dog-svg,
+  .tail-wagging #tail-group { animation: none; }
+  .meter-bar { transition: none !important; }
+}
+
+/* ── Meters ──────────────────────────────── */
+.meters-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.meter-card {
+  background: var(--surface);
+  border-radius: var(--rSm);
+  padding: 0.9rem 1rem;
+  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+}
+.meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+.meter-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.meter-pct {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.meter-track {
+  height: 10px;
+  background: var(--border);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.meter-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 100px;
+  transition: width 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.meter-bar.walk { background: var(--walk); }
+.meter-bar.feed { background: var(--feed); }
+
+/* ── Task input ──────────────────────────── */
+.input-area {
+  display: flex;
+  gap: 0.5rem;
+}
+.task-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--rPill);
+  padding: 0.7rem 1.2rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  outline: none;
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s;
+}
+.task-input::placeholder { color: var(--muted); font-weight: 400; }
+.task-input:focus { border-color: var(--accent); }
+
+.btn-add {
+  background: var(--text);
+  color: var(--ground);
+  border: none;
+  border-radius: var(--rPill);
+  padding: 0.7rem 1.1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.1s, opacity 0.12s;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+.btn-add:hover { opacity: 0.86; }
+.btn-add:active { transform: scale(0.94); }
+
+.input-hint {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.59rem;
+  color: var(--muted);
+  padding: 0.3rem 1rem 0;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+.input-hint b { color: var(--text); }
+
+/* ── Task list ───────────────────────────── */
+.tasks-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.task-item {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--rSm);
+  padding: 0.72rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  box-shadow: 0 2px 8px rgba(44,26,8,0.06);
+  transition: opacity 0.22s;
+}
+.task-item.done { opacity: 0.48; }
+.task-item.done .task-label {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.check-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  color: white;
+  font-weight: 700;
+  transition: background 0.15s, border-color 0.15s;
+}
+.check-btn:hover { border-color: var(--accent); }
+.task-item.done .check-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.task-label {
+  flex: 1;
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.task-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+.task-badge.walk { background: var(--walk-bg); color: var(--walk-fg); }
+.task-badge.feed { background: var(--feed-bg); color: var(--feed-fg); }
+
+.del-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.1rem;
+  opacity: 0.32;
+  transition: opacity 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+.del-btn:hover { opacity: 1; color: var(--danger); }
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* ── Footer ──────────────────────────────── */
+.footer-row {
+  display: flex;
+  justify-content: center;
+}
+.btn-reset {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: var(--rPill);
+  padding: 0.38rem 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.59rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Focus ───────────────────────────────── */
+:focus-visible {
+  outline: 2.5px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="site-title">
+    <h1>Mochi's To-Do</h1>
+    <p class="byline">Your golden companion</p>
+  </header>
+
+  <!-- Dog companion -->
+  <div class="dog-card">
+    <div class="dog-stage" id="dog-stage">
+      <svg id="dog-svg" viewBox="0 0 200 215" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="Mochi the dog">
+
+        <!-- Tail (waggable) -->
+        <g id="tail-group">
+          <path d="M 148 132 Q 178 102 167 70 Q 158 44 174 28"
+                stroke="#B8773A" stroke-width="17" fill="none"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+
+        <!-- Body -->
+        <ellipse cx="100" cy="148" rx="52" ry="39" fill="#DCA848"/>
+
+        <!-- Back legs (behind front legs) -->
+        <rect x="57" y="179" width="16" height="26" rx="8" fill="#C48C30"/>
+        <rect x="129" y="179" width="16" height="26" rx="8" fill="#C48C30"/>
+
+        <!-- Left ear (behind head) -->
+        <ellipse cx="71" cy="57" rx="15" ry="27" fill="#B8773A"
+                 transform="rotate(-16, 71, 57)"/>
+        <!-- Right ear (behind head) -->
+        <ellipse cx="129" cy="57" rx="15" ry="27" fill="#B8773A"
+                 transform="rotate(16, 129, 57)"/>
+
+        <!-- Head -->
+        <circle cx="100" cy="65" r="35" fill="#DCA848"/>
+
+        <!-- Collar band -->
+        <path d="M 69 93 Q 100 106 131 93"
+              stroke="#4D7EC2" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- Collar tag -->
+        <circle cx="100" cy="104" r="4.5" fill="#C8A820"/>
+        <line x1="100" y1="99" x2="100" y2="102" stroke="#C8A820" stroke-width="1.5"/>
+
+        <!-- Muzzle area -->
+        <ellipse cx="100" cy="79" rx="17" ry="12" fill="#C89030"/>
+
+        <!-- Nose -->
+        <ellipse cx="100" cy="73" rx="7.5" ry="5.5" fill="#2C1A08"/>
+        <ellipse cx="97.5" cy="71.5" rx="2" ry="1.5" fill="white" opacity="0.45"/>
+
+        <!-- Happy eyes (default) -->
+        <g id="eyes-happy">
+          <circle cx="86" cy="58" r="6" fill="#2C1A08"/>
+          <circle cx="114" cy="58" r="6" fill="#2C1A08"/>
+          <circle cx="87.8" cy="55.8" r="2.2" fill="white"/>
+          <circle cx="115.8" cy="55.8" r="2.2" fill="white"/>
+        </g>
+
+        <!-- Sad eyes (hidden by default) -->
+        <g id="eyes-sad" style="display:none">
+          <!-- Droopy eye arcs -->
+          <path d="M 80 55 Q 86 63 92 55"
+                stroke="#2C1A08" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M 108 55 Q 114 63 120 55"
+                stroke="#2C1A08" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <!-- Sad brows (angled inward) -->
+          <path d="M 80 49 Q 86 47 92 52"
+                stroke="#B8773A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M 108 52 Q 114 47 120 49"
+                stroke="#B8773A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- Happy mouth (default) -->
+        <path id="mouth-happy" d="M 91 84 Q 100 92 109 84"
+              stroke="#2C1A08" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+        <!-- Sad mouth (hidden by default) -->
+        <path id="mouth-sad" d="M 91 90 Q 100 83 109 90"
+              stroke="#2C1A08" stroke-width="2.5" fill="none" stroke-linecap="round"
+              style="display:none"/>
+
+        <!-- Front legs (in front of body) -->
+        <rect x="77" y="181" width="17" height="28" rx="8.5" fill="#DCA848"/>
+        <rect x="107" y="181" width="17" height="28" rx="8.5" fill="#DCA848"/>
+
+        <!-- Paw shading -->
+        <ellipse cx="85.5" cy="207" rx="8.5" ry="5" fill="#C48C30" opacity="0.55"/>
+        <ellipse cx="115.5" cy="207" rx="8.5" ry="5" fill="#C48C30" opacity="0.55"/>
+
+      </svg>
+    </div>
+    <p class="dog-mood-text" id="dog-mood">What are we doing today?</p>
+  </div>
+
+  <!-- Meters -->
+  <div class="meters-row">
+    <div class="meter-card">
+      <div class="meter-head">
+        <span class="meter-name">Walk</span>
+        <span class="meter-pct" id="walk-pct">0%</span>
+      </div>
+      <div class="meter-track">
+        <div class="meter-bar walk" id="walk-bar"></div>
+      </div>
+    </div>
+    <div class="meter-card">
+      <div class="meter-head">
+        <span class="meter-name">Feed</span>
+        <span class="meter-pct" id="feed-pct">0%</span>
+      </div>
+      <div class="meter-track">
+        <div class="meter-bar feed" id="feed-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task input -->
+  <div>
+    <div class="input-area">
+      <input type="text" class="task-input" id="task-input"
+             placeholder="Add a task for Mochi…" autocomplete="off"
+             aria-label="New task">
+      <button class="btn-add" id="btn-add">+ Add</button>
+    </div>
+    <p class="input-hint">
+      Include <b>#walk</b> or <b>#feed</b> to fill the meters —
+      or just type <b>walk</b>, <b>feed</b>, <b>treat</b>, etc.
+    </p>
+  </div>
+
+  <!-- Task list -->
+  <div class="tasks-section" id="task-list" aria-live="polite"></div>
+
+  <!-- Footer -->
+  <div class="footer-row">
+    <button class="btn-reset" id="btn-reset">↺ New day — reset meters</button>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── State ──────────────────────────────────────────────────────────────
+  var tasks = [];
+  var walkMeter = 0;
+  var feedMeter = 0;
+
+  function load() {
+    try {
+      tasks     = JSON.parse(localStorage.getItem('mochi-tasks') || '[]');
+      walkMeter = parseFloat(localStorage.getItem('mochi-walk')  || '0');
+      feedMeter = parseFloat(localStorage.getItem('mochi-feed')  || '0');
+    } catch (_) {
+      tasks = []; walkMeter = 0; feedMeter = 0;
+    }
+  }
+
+  function save() {
+    localStorage.setItem('mochi-tasks', JSON.stringify(tasks));
+    localStorage.setItem('mochi-walk',  String(walkMeter));
+    localStorage.setItem('mochi-feed',  String(feedMeter));
+  }
+
+  // ── Tag detection ───────────────────────────────────────────────────────
+  function detectTag(text) {
+    var t = text.toLowerCase();
+    if (/#walk\b/.test(t) || /\bwalk\b/.test(t) || /\bhike\b/.test(t) || /\brun\b/.test(t)) return 'walk';
+    if (/#feed\b/.test(t) || /\bfeed\b/.test(t) || /\bfood\b/.test(t) ||
+        /\btreat\b/.test(t) || /\bmeal\b/.test(t) || /\bwater\b/.test(t) ||
+        /\bkibble\b/.test(t)) return 'feed';
+    return null;
+  }
+
+  // ── Task operations ─────────────────────────────────────────────────────
+  function addTask(text) {
+    text = text.trim();
+    if (!text) return;
+    tasks.unshift({ id: Date.now(), text: text, tag: detectTag(text), done: false });
+    save();
+    render();
+  }
+
+  function toggleTask(id) {
+    var task = tasks.find(function (t) { return t.id === id; });
+    if (!task) return;
+    task.done = !task.done;
+    if (task.done) {
+      if (task.tag === 'walk') walkMeter = Math.min(100, walkMeter + 20);
+      if (task.tag === 'feed') feedMeter = Math.min(100, feedMeter + 25);
+      triggerBounce();
+    }
+    save();
+    render();
+  }
+
+  function removeTask(id) {
+    tasks = tasks.filter(function (t) { return t.id !== id; });
+    save();
+    render();
+  }
+
+  // ── Animations ─────────────────────────────────────────────────────────
+  var bounceTimer = null;
+
+  function triggerBounce() {
+    var stage = document.getElementById('dog-stage');
+    stage.classList.remove('dog-bouncing', 'tail-wagging');
+    void stage.offsetWidth; // force reflow
+    stage.classList.add('dog-bouncing', 'tail-wagging');
+    clearTimeout(bounceTimer);
+    bounceTimer = setTimeout(function () {
+      stage.classList.remove('dog-bouncing', 'tail-wagging');
+    }, 1300);
+  }
+
+  // ── Mood logic ─────────────────────────────────────────────────────────
+  function isSad() {
+    return (walkMeter > 0 || feedMeter > 0) && walkMeter < 30 && feedMeter < 30;
+  }
+
+  function moodText() {
+    var wHigh = walkMeter >= 70, fHigh = feedMeter >= 70;
+    var wMid  = walkMeter >= 40, fMid  = feedMeter >= 40;
+    if (isSad())              return 'I need a walk AND some food… 🥺';
+    if (wHigh && fHigh)       return 'Best. Day. Ever! 🎉';
+    if (wHigh && !fMid)       return 'Great walk! But I’m hungry… 🦴';
+    if (fHigh && !wMid)       return 'Fed and ready to go outside! 🦸';
+    if (wHigh)                return 'That walk was wonderful! 🌿';
+    if (fHigh)                return 'Nom nom, so good! 😋';
+    if (wMid || fMid)         return 'Feeling pretty good! 🐾';
+    return 'What are we doing today?';
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────
+  function render() {
+    // Meters
+    document.getElementById('walk-bar').style.width = walkMeter + '%';
+    document.getElementById('feed-bar').style.width = feedMeter + '%';
+    document.getElementById('walk-pct').textContent  = Math.round(walkMeter) + '%';
+    document.getElementById('feed-pct').textContent  = Math.round(feedMeter) + '%';
+
+    // Dog state
+    var sad = isSad();
+    document.getElementById('eyes-happy').style.display  = sad ? 'none' : '';
+    document.getElementById('eyes-sad').style.display    = sad ? '' : 'none';
+    document.getElementById('mouth-happy').style.display = sad ? 'none' : '';
+    document.getElementById('mouth-sad').style.display   = sad ? '' : 'none';
+    document.getElementById('dog-mood').textContent = moodText();
+
+    // Task list
+    var listEl = document.getElementById('task-list');
+    if (!tasks.length) {
+      listEl.innerHTML = '<div class="empty-state">Nothing yet — give Mochi something to do!</div>';
+      return;
+    }
+
+    listEl.innerHTML = tasks.map(function (task) {
+      var safeText = esc(task.text);
+      var checkMark = task.done ? '✓' : '';
+      var badge = task.tag
+        ? '<span class="task-badge ' + task.tag + '">' + task.tag + '</span>'
+        : '';
+      return (
+        '<div class="task-item' + (task.done ? ' done' : '') + '">' +
+          '<button class="check-btn" onclick="app.toggle(' + task.id + ')" ' +
+                  'aria-label="' + (task.done ? 'Unmark' : 'Complete') + ' task">' +
+                  checkMark + '</button>' +
+          '<span class="task-label">' + safeText + '</span>' +
+          badge +
+          '<button class="del-btn" onclick="app.remove(' + task.id + ')" ' +
+                  'aria-label="Delete task">\xD7</button>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,  '&amp;')
+      .replace(/</g,  '&lt;')
+      .replace(/>/g,  '&gt;')
+      .replace(/"/g,  '&quot;')
+      .replace(/'/g,  '&#39;');
+  }
+
+  // ── Events ─────────────────────────────────────────────────────────────
+  var inputEl = document.getElementById('task-input');
+
+  function submitTask() {
+    var val = inputEl.value.trim();
+    if (val) { addTask(val); inputEl.value = ''; }
+    inputEl.focus();
+  }
+
+  inputEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') submitTask();
+  });
+  document.getElementById('btn-add').addEventListener('click', submitTask);
+
+  document.getElementById('btn-reset').addEventListener('click', function () {
+    walkMeter = 0;
+    feedMeter = 0;
+    save();
+    render();
+  });
+
+  // ── Public API for inline onclick handlers ─────────────────────────────
+  window.app = { toggle: toggleTask, remove: removeTask };
+
+  // ── Boot ───────────────────────────────────────────────────────────────
+  load();
+  render();
+}());
+</script>
+</body>
+</html>
