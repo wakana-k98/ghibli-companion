@@ -3,492 +3,465 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mochi's To-Do</title>
+<title>Jiji's To-Do</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
-  --ground:    #ECC96C;
-  --surface:   #FAF1DD;
-  --text:      #2C1A08;
-  --muted:     #8A6030;
-  --accent:    #4D7EC2;
-  --walk:      #50A340;
-  --walk-bg:   rgba(80,163,64,0.14);
-  --walk-fg:   #2D7020;
-  --feed:      #D96820;
-  --feed-bg:   rgba(217,104,32,0.14);
-  --feed-fg:   #A04010;
-  --danger:    #C04040;
-  --border:    rgba(44,26,8,0.12);
-  --shadow:    0 3px 16px rgba(44,26,8,0.10);
-  --rLg:       22px;
-  --rSm:       14px;
-  --rPill:     100px;
+  --gnd:    #F4E9C4;
+  --srf:    #FEFBF0;
+  --txt:    #26190A;
+  --mut:    #8A7040;
+  --acc:    #6DC4CE;
+  --fish:   #E07040;
+  --danger: #C05050;
+  --bdr:    rgba(38,25,10,0.11);
+  --shd:    0 3px 18px rgba(38,25,10,0.09);
+  --rLg:    20px;
+  --rSm:    13px;
+  --rPill:  100px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background-color: var(--ground);
-  background-image: radial-gradient(circle, rgba(255,255,255,0.22) 1px, transparent 1px);
-  background-size: 18px 18px;
-  color: var(--text);
+  background-color: var(--gnd);
+  background-image: radial-gradient(rgba(255,255,255,0.28) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: var(--txt);
   font-family: 'Nunito', system-ui, sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.25rem 1rem 4rem;
+  padding: 1.1rem 1rem 2.5rem;
 }
 
 .app {
   width: 100%;
-  max-width: 460px;
+  max-width: 370px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
-/* ── Header ─────────────────────────────── */
-.site-title {
-  text-align: center;
-  padding: 0.25rem 0 0.5rem;
+/* ── Header ── */
+.hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 0.2rem;
 }
-.site-title h1 {
-  font-size: 2rem;
+.hdr h1 {
+  font-size: 1.65rem;
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
 }
-.site-title .byline {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 0.3rem;
-}
-
-/* ── Dog card ────────────────────────────── */
-.dog-card {
-  background: var(--surface);
-  border-radius: var(--rLg);
-  padding: 1.5rem 1rem 1.2rem;
+.fish-badge {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  box-shadow: var(--shadow);
-  border: 1.5px solid var(--border);
-}
-
-.dog-stage {
-  height: 190px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-#dog-svg {
-  width: 190px;
-  height: 190px;
-  overflow: visible;
-}
-
-.dog-mood-text {
-  font-size: 1rem;
-  font-weight: 700;
-  text-align: center;
-  min-height: 1.5em;
-  color: var(--text);
-  transition: color 0.3s;
-}
-
-/* ── Dog animations ───────────────────────── */
-@keyframes dog-bounce {
-  0%   { transform: translateY(0) rotate(0deg); }
-  18%  { transform: translateY(-24px) rotate(-6deg); }
-  36%  { transform: translateY(-10px) rotate(4deg); }
-  55%  { transform: translateY(-18px) rotate(-3deg); }
-  74%  { transform: translateY(-5px) rotate(2deg); }
-  100% { transform: translateY(0) rotate(0deg); }
-}
-@keyframes tail-wag {
-  0%   { transform: rotate(-28deg); }
-  50%  { transform: rotate(28deg); }
-  100% { transform: rotate(-28deg); }
-}
-
-.dog-bouncing #dog-svg {
-  animation: dog-bounce 0.7s cubic-bezier(0.28, 0.84, 0.42, 1);
-}
-
-#tail-group {
-  transform-box: fill-box;
-  transform-origin: 0% 100%;
-}
-.tail-wagging #tail-group {
-  animation: tail-wag 0.22s ease-in-out 5;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dog-bouncing #dog-svg,
-  .tail-wagging #tail-group { animation: none; }
-  .meter-bar { transition: none !important; }
-}
-
-/* ── Meters ──────────────────────────────── */
-.meters-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-.meter-card {
-  background: var(--surface);
-  border-radius: var(--rSm);
-  padding: 0.9rem 1rem;
-  box-shadow: var(--shadow);
-  border: 1.5px solid var(--border);
-}
-.meter-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 0.5rem;
-}
-.meter-name {
+  gap: 0.28rem;
+  background: var(--srf);
+  border: 1.5px solid var(--bdr);
+  border-radius: var(--rPill);
+  padding: 0.28rem 0.65rem;
   font-family: 'Space Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.meter-pct {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.88rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--text);
+  box-shadow: var(--shd);
 }
-.meter-track {
-  height: 10px;
-  background: var(--border);
-  border-radius: 100px;
-  overflow: hidden;
-}
-.meter-bar {
-  height: 100%;
-  width: 0%;
-  border-radius: 100px;
-  transition: width 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.meter-bar.walk { background: var(--walk); }
-.meter-bar.feed { background: var(--feed); }
+.fish-ico { color: var(--fish); }
 
-/* ── Task input ──────────────────────────── */
-.input-area {
-  display: flex;
-  gap: 0.5rem;
-}
+/* ── Input ── */
+.input-row { display: flex; gap: 0.45rem; }
 .task-input {
   flex: 1;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
+  background: var(--srf);
+  border: 1.5px solid var(--bdr);
   border-radius: var(--rPill);
-  padding: 0.7rem 1.2rem;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text);
-  outline: none;
-  box-shadow: var(--shadow);
-  transition: border-color 0.15s;
-}
-.task-input::placeholder { color: var(--muted); font-weight: 400; }
-.task-input:focus { border-color: var(--accent); }
-
-.btn-add {
-  background: var(--text);
-  color: var(--ground);
-  border: none;
-  border-radius: var(--rPill);
-  padding: 0.7rem 1.1rem;
+  padding: 0.62rem 1.05rem;
   font-family: 'Nunito', sans-serif;
   font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--txt);
+  outline: none;
+  box-shadow: var(--shd);
+  transition: border-color 0.15s;
+}
+.task-input::placeholder { color: var(--mut); font-weight: 400; }
+.task-input:focus { border-color: var(--acc); }
+.btn-add {
+  background: var(--txt);
+  color: var(--gnd);
+  border: none;
+  border-radius: var(--rPill);
+  padding: 0.62rem 0.95rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.86rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shd);
   transition: transform 0.1s, opacity 0.12s;
   white-space: nowrap;
-  letter-spacing: -0.01em;
 }
-.btn-add:hover { opacity: 0.86; }
-.btn-add:active { transform: scale(0.94); }
+.btn-add:hover { opacity: 0.82; }
+.btn-add:active { transform: scale(0.93); }
 
-.input-hint {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.59rem;
-  color: var(--muted);
-  padding: 0.3rem 1rem 0;
-  letter-spacing: 0.04em;
-  line-height: 1.6;
-}
-.input-hint b { color: var(--text); }
+/* ── Task list ── */
+.task-list { display: flex; flex-direction: column; gap: 0.4rem; }
 
-/* ── Task list ───────────────────────────── */
-.tasks-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
 .task-item {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
+  background: var(--srf);
+  border: 1.5px solid var(--bdr);
   border-radius: var(--rSm);
-  padding: 0.72rem 0.9rem;
+  padding: 0.65rem 0.85rem;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  box-shadow: 0 2px 8px rgba(44,26,8,0.06);
+  gap: 0.55rem;
+  box-shadow: 0 2px 7px rgba(38,25,10,0.07);
   transition: opacity 0.22s;
 }
-.task-item.done { opacity: 0.48; }
-.task-item.done .task-label {
-  text-decoration: line-through;
-  color: var(--muted);
-}
+.task-item.done { opacity: 0.42; }
+.task-item.done .task-lbl { text-decoration: line-through; color: var(--mut); }
 
-.check-btn {
-  width: 24px;
-  height: 24px;
+.chk-btn {
+  width: 22px; height: 22px;
   border-radius: 50%;
-  border: 2px solid var(--border);
+  border: 2px solid var(--bdr);
   background: transparent;
   cursor: pointer;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.68rem;
-  color: white;
-  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.62rem; color: white; font-weight: 800;
   transition: background 0.15s, border-color 0.15s;
 }
-.check-btn:hover { border-color: var(--accent); }
-.task-item.done .check-btn {
-  background: var(--accent);
-  border-color: var(--accent);
-}
+.chk-btn:hover { border-color: var(--acc); }
+.task-item.done .chk-btn { background: var(--acc); border-color: var(--acc); }
 
-.task-label {
+.task-lbl {
   flex: 1;
-  font-size: 0.93rem;
-  font-weight: 600;
-  color: var(--text);
-  word-break: break-word;
-}
-
-.task-badge {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.56rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.18rem 0.55rem;
-  border-radius: 100px;
-  flex-shrink: 0;
-}
-.task-badge.walk { background: var(--walk-bg); color: var(--walk-fg); }
-.task-badge.feed { background: var(--feed-bg); color: var(--feed-fg); }
-
-.del-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--muted);
-  font-size: 1.1rem;
-  line-height: 1;
-  padding: 0.1rem;
-  opacity: 0.32;
-  transition: opacity 0.12s, color 0.12s;
-  flex-shrink: 0;
-}
-.del-btn:hover { opacity: 1; color: var(--danger); }
-
-.empty-state {
-  text-align: center;
-  padding: 2rem 0;
-  color: var(--muted);
   font-size: 0.88rem;
   font-weight: 600;
+  color: var(--txt);
+  word-break: break-word;
+}
+.del-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--mut); font-size: 1rem; line-height: 1; padding: 0.1rem;
+  opacity: 0.28; transition: opacity 0.12s, color 0.12s; flex-shrink: 0;
+}
+.del-btn:hover { opacity: 1; color: var(--danger); }
+.empty-state {
+  text-align: center; padding: 1.25rem 0;
+  color: var(--mut); font-size: 0.83rem; font-weight: 600;
 }
 
-/* ── Footer ──────────────────────────────── */
-.footer-row {
-  display: flex;
-  justify-content: center;
+/* ── Cat stage card ── */
+.stage-card {
+  background: var(--srf);
+  border: 1.5px solid var(--bdr);
+  border-radius: var(--rLg);
+  overflow: hidden;
+  box-shadow: var(--shd);
 }
-.btn-reset {
-  background: none;
-  border: 1.5px solid var(--border);
-  border-radius: var(--rPill);
-  padding: 0.38rem 1rem;
+
+/* Reward strip */
+.reward-strip {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1.5px solid var(--bdr);
+  background: var(--gnd);
+}
+.reward-strip.on { display: flex; }
+.reward-lbl {
   font-family: 'Space Mono', monospace;
   font-size: 0.59rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  color: var(--mut);
 }
-.btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+.reward-btns { display: flex; gap: 0.45rem; }
+.reward-btn {
+  background: var(--srf);
+  border: 1.5px solid var(--bdr);
+  border-radius: var(--rPill);
+  padding: 0.38rem 0.78rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.1s;
+}
+.reward-btn:hover { background: var(--acc); border-color: var(--acc); color: white; }
+.reward-btn:active { transform: scale(0.93); }
 
-/* ── Focus ───────────────────────────────── */
+/* Stage floor */
+.cat-stage {
+  position: relative;
+  height: 145px;
+  background: linear-gradient(to bottom, var(--srf), #F0E8C8 88%, #D8C888 100%);
+  overflow: hidden;
+}
+
+/* Grass strokes on floor */
+.cat-stage::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 18px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px, transparent 14px,
+    rgba(140,120,60,0.15) 14px, rgba(140,120,60,0.15) 15px
+  );
+  pointer-events: none;
+}
+
+/* Cat position container — JS moves .left */
+#cat-pos {
+  position: absolute;
+  bottom: 14px;
+  left: 20px;
+}
+
+/* ── Cat animations ── */
+@keyframes walk-bob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-7px); }
+}
+@keyframes jump {
+  0%   { transform: translateY(0); }
+  28%  { transform: translateY(-26px); }
+  52%  { transform: translateY(-10px); }
+  72%  { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+}
+@keyframes tail-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50%       { transform: rotate(16deg); }
+}
+@keyframes tail-fast {
+  0%, 100% { transform: rotate(-8deg); }
+  50%       { transform: rotate(22deg); }
+}
+@keyframes heart-rise {
+  0%   { opacity: 0; transform: translateY(0px); }
+  18%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-32px); }
+}
+@keyframes eat-nod {
+  0%, 100% { transform: rotate(0deg); }
+  28%       { transform: rotate(-14deg); }
+  58%       { transform: rotate(-9deg); }
+}
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  94%            { transform: scaleY(0.1); }
+}
+
+/* State classes on #cat-pos */
+#cat-inner { /* JS-controlled walk animation */ }
+
+.walking #cat-inner { animation: walk-bob 0.38s ease-in-out infinite; }
+.playing #cat-inner { animation: jump 0.52s ease-out 2; }
+
+/* Flip when going left */
+.facing-left #cat-svg { transform: scaleX(-1); }
+
+/* Tail */
+#g-tail {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+}
+.walking  #g-tail { animation: tail-sway 0.55s ease-in-out infinite; }
+.sitting  #g-tail { animation: tail-sway 1.7s ease-in-out infinite; }
+.petting  #g-tail { animation: tail-fast 0.6s ease-in-out infinite; }
+.playing  #g-tail { animation: tail-fast 0.3s ease-in-out infinite; }
+.eating   #g-tail { animation: tail-sway 1.2s ease-in-out infinite; }
+
+/* Eating nod */
+#g-inner { transform-origin: 50px 42px; }
+.eating #g-inner { animation: eat-nod 0.55s ease-in-out 3; }
+
+/* Eyes blink */
+#g-eyes { transform-box: fill-box; transform-origin: 50% 50%; }
+.walking #g-eyes { animation: blink 4s ease-in-out infinite; }
+.sitting #g-eyes { animation: blink 3s ease-in-out infinite; }
+
+/* Blush */
+#g-blush { opacity: 0; transition: opacity 0.4s; }
+.petting #g-blush { opacity: 1; }
+
+/* Heart */
+#g-heart { opacity: 0; pointer-events: none; }
+.petting #g-heart { animation: heart-rise 2s ease-out forwards; }
+
+/* Focus */
 :focus-visible {
-  outline: 2.5px solid var(--accent);
+  outline: 2.5px solid var(--acc);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #cat-inner, #g-tail, #g-inner, #g-eyes, #g-heart { animation: none !important; }
+  .petting #g-blush { opacity: 1; }
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <header class="site-title">
-    <h1>Mochi's To-Do</h1>
-    <p class="byline">Your golden companion</p>
+  <header class="hdr">
+    <h1>Jiji's To-Do</h1>
+    <div class="fish-badge" aria-live="polite" aria-label="Fish earned">
+      <span class="fish-ico">🐟</span>
+      <span id="fish-num">0</span>
+    </div>
   </header>
 
-  <!-- Dog companion -->
-  <div class="dog-card">
-    <div class="dog-stage" id="dog-stage">
-      <svg id="dog-svg" viewBox="0 0 200 215" xmlns="http://www.w3.org/2000/svg"
-           role="img" aria-label="Mochi the dog">
-
-        <!-- Tail (waggable) -->
-        <g id="tail-group">
-          <path d="M 148 132 Q 178 102 167 70 Q 158 44 174 28"
-                stroke="#B8773A" stroke-width="17" fill="none"
-                stroke-linecap="round" stroke-linejoin="round"/>
-        </g>
-
-        <!-- Body -->
-        <ellipse cx="100" cy="148" rx="52" ry="39" fill="#DCA848"/>
-
-        <!-- Back legs (behind front legs) -->
-        <rect x="57" y="179" width="16" height="26" rx="8" fill="#C48C30"/>
-        <rect x="129" y="179" width="16" height="26" rx="8" fill="#C48C30"/>
-
-        <!-- Left ear (behind head) -->
-        <ellipse cx="71" cy="57" rx="15" ry="27" fill="#B8773A"
-                 transform="rotate(-16, 71, 57)"/>
-        <!-- Right ear (behind head) -->
-        <ellipse cx="129" cy="57" rx="15" ry="27" fill="#B8773A"
-                 transform="rotate(16, 129, 57)"/>
-
-        <!-- Head -->
-        <circle cx="100" cy="65" r="35" fill="#DCA848"/>
-
-        <!-- Collar band -->
-        <path d="M 69 93 Q 100 106 131 93"
-              stroke="#4D7EC2" stroke-width="7" fill="none" stroke-linecap="round"/>
-        <!-- Collar tag -->
-        <circle cx="100" cy="104" r="4.5" fill="#C8A820"/>
-        <line x1="100" y1="99" x2="100" y2="102" stroke="#C8A820" stroke-width="1.5"/>
-
-        <!-- Muzzle area -->
-        <ellipse cx="100" cy="79" rx="17" ry="12" fill="#C89030"/>
-
-        <!-- Nose -->
-        <ellipse cx="100" cy="73" rx="7.5" ry="5.5" fill="#2C1A08"/>
-        <ellipse cx="97.5" cy="71.5" rx="2" ry="1.5" fill="white" opacity="0.45"/>
-
-        <!-- Happy eyes (default) -->
-        <g id="eyes-happy">
-          <circle cx="86" cy="58" r="6" fill="#2C1A08"/>
-          <circle cx="114" cy="58" r="6" fill="#2C1A08"/>
-          <circle cx="87.8" cy="55.8" r="2.2" fill="white"/>
-          <circle cx="115.8" cy="55.8" r="2.2" fill="white"/>
-        </g>
-
-        <!-- Sad eyes (hidden by default) -->
-        <g id="eyes-sad" style="display:none">
-          <!-- Droopy eye arcs -->
-          <path d="M 80 55 Q 86 63 92 55"
-                stroke="#2C1A08" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-          <path d="M 108 55 Q 114 63 120 55"
-                stroke="#2C1A08" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-          <!-- Sad brows (angled inward) -->
-          <path d="M 80 49 Q 86 47 92 52"
-                stroke="#B8773A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M 108 52 Q 114 47 120 49"
-                stroke="#B8773A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        </g>
-
-        <!-- Happy mouth (default) -->
-        <path id="mouth-happy" d="M 91 84 Q 100 92 109 84"
-              stroke="#2C1A08" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-
-        <!-- Sad mouth (hidden by default) -->
-        <path id="mouth-sad" d="M 91 90 Q 100 83 109 90"
-              stroke="#2C1A08" stroke-width="2.5" fill="none" stroke-linecap="round"
-              style="display:none"/>
-
-        <!-- Front legs (in front of body) -->
-        <rect x="77" y="181" width="17" height="28" rx="8.5" fill="#DCA848"/>
-        <rect x="107" y="181" width="17" height="28" rx="8.5" fill="#DCA848"/>
-
-        <!-- Paw shading -->
-        <ellipse cx="85.5" cy="207" rx="8.5" ry="5" fill="#C48C30" opacity="0.55"/>
-        <ellipse cx="115.5" cy="207" rx="8.5" ry="5" fill="#C48C30" opacity="0.55"/>
-
-      </svg>
-    </div>
-    <p class="dog-mood-text" id="dog-mood">What are we doing today?</p>
+  <div class="input-row">
+    <input type="text" class="task-input" id="task-input"
+           placeholder="Add something to do…" autocomplete="off" aria-label="New task">
+    <button class="btn-add" id="btn-add">+ Add</button>
   </div>
 
-  <!-- Meters -->
-  <div class="meters-row">
-    <div class="meter-card">
-      <div class="meter-head">
-        <span class="meter-name">Walk</span>
-        <span class="meter-pct" id="walk-pct">0%</span>
-      </div>
-      <div class="meter-track">
-        <div class="meter-bar walk" id="walk-bar"></div>
+  <div class="task-list" id="task-list" aria-live="polite"></div>
+
+  <!-- Cat card -->
+  <div class="stage-card">
+
+    <!-- Reward popup strip -->
+    <div class="reward-strip" id="reward-strip" role="region" aria-label="Reward Jiji">
+      <span class="reward-lbl" id="reward-lbl">✨ Task done! How should Jiji celebrate?</span>
+      <div class="reward-btns">
+        <button class="reward-btn" id="btn-feed">🐟 Feed</button>
+        <button class="reward-btn" id="btn-pet">✋ Pet</button>
+        <button class="reward-btn" id="btn-play">🎾 Play</button>
       </div>
     </div>
-    <div class="meter-card">
-      <div class="meter-head">
-        <span class="meter-name">Feed</span>
-        <span class="meter-pct" id="feed-pct">0%</span>
-      </div>
-      <div class="meter-track">
-        <div class="meter-bar feed" id="feed-bar"></div>
+
+    <!-- Walking stage -->
+    <div class="cat-stage" id="cat-stage">
+      <div id="cat-pos">
+        <div id="cat-inner">
+
+          <svg id="cat-svg" viewBox="0 0 100 148" width="78" height="116"
+               xmlns="http://www.w3.org/2000/svg" overflow="visible"
+               role="img" aria-label="Jiji the cat">
+
+            <!-- Tail (behind body) -->
+            <g id="g-tail">
+              <path d="M 52 114 C 75 106 84 84 76 64 C 70 50 76 36 72 24"
+                    stroke="#16162A" stroke-width="10" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Tail tuft -->
+              <circle cx="71" cy="21" r="7.5" fill="#1E1E30"/>
+            </g>
+
+            <!-- Body -->
+            <ellipse cx="50" cy="112" rx="24" ry="28" fill="#16162A"/>
+
+            <!-- Everything that nods for eating -->
+            <g id="g-inner">
+
+              <!-- Left ear outer -->
+              <polygon points="22,40 14,8 44,32" fill="#16162A"/>
+              <!-- Left ear inner -->
+              <polygon points="25,38 19,14 40,31" fill="#8C7CC0"/>
+
+              <!-- Right ear outer -->
+              <polygon points="78,40 86,8 56,32" fill="#16162A"/>
+              <!-- Right ear inner -->
+              <polygon points="75,38 81,14 60,31" fill="#8C7CC0"/>
+
+              <!-- Head -->
+              <circle cx="50" cy="52" r="37" fill="#16162A"/>
+
+              <!-- Blush cheeks (petting state) -->
+              <g id="g-blush">
+                <ellipse cx="24" cy="66" rx="9" ry="5.5" fill="#E08080" opacity="0.32"/>
+                <ellipse cx="76" cy="66" rx="9" ry="5.5" fill="#E08080" opacity="0.32"/>
+              </g>
+
+              <!-- Eyes open -->
+              <g id="g-eyes">
+                <circle cx="35" cy="48" r="13" fill="#7ECAD4"/>
+                <circle cx="65" cy="48" r="13" fill="#7ECAD4"/>
+                <circle cx="35" cy="49" r="9" fill="#0C0C1E"/>
+                <circle cx="65" cy="49" r="9" fill="#0C0C1E"/>
+                <!-- Shine -->
+                <circle cx="38.5" cy="43.5" r="3.5" fill="white"/>
+                <circle cx="68.5" cy="43.5" r="3.5" fill="white"/>
+                <circle cx="33" cy="51"   r="1.5" fill="white" opacity="0.45"/>
+                <circle cx="63" cy="51"   r="1.5" fill="white" opacity="0.45"/>
+              </g>
+
+              <!-- Eyes closed (petting) — hidden by default -->
+              <g id="g-eyes-closed" style="display:none">
+                <path d="M 23,47 Q 35,58 47,47"
+                      stroke="#1A1A32" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                <path d="M 53,47 Q 65,58 77,47"
+                      stroke="#1A1A32" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+              </g>
+
+              <!-- Nose -->
+              <ellipse cx="50" cy="63" rx="4" ry="3" fill="#CC7070"/>
+
+              <!-- Mouth: happy (default) -->
+              <g id="g-mouth-happy">
+                <path d="M 42,69 Q 50,77 58,69"
+                      stroke="#BC6060" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <!-- fangs -->
+                <polygon points="46,70 44,76 48,76" fill="white" opacity="0.88"/>
+                <polygon points="54,70 52,76 56,76" fill="white" opacity="0.88"/>
+              </g>
+
+              <!-- Mouth: eating (shown during feed) -->
+              <g id="g-mouth-eat" style="display:none">
+                <path d="M 41,68 Q 50,80 59,68 L 59,72 Q 50,83 41,72 Z"
+                      fill="#A05050" opacity="0.82"/>
+                <ellipse cx="50" cy="76" rx="5" ry="3" fill="#C07070" opacity="0.5"/>
+              </g>
+
+              <!-- Mouth: wide smile (petting) -->
+              <g id="g-mouth-pet" style="display:none">
+                <path d="M 38,69 Q 50,81 62,69"
+                      stroke="#BC6060" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </g>
+
+              <!-- Whiskers -->
+              <g stroke="rgba(210,198,172,0.52)" stroke-width="1" stroke-linecap="round">
+                <line x1="16" y1="60" x2="42" y2="63"/>
+                <line x1="14" y1="66" x2="40" y2="66"/>
+                <line x1="16" y1="72" x2="42" y2="69"/>
+                <line x1="84" y1="60" x2="58" y2="63"/>
+                <line x1="86" y1="66" x2="60" y2="66"/>
+                <line x1="84" y1="72" x2="58" y2="69"/>
+              </g>
+
+            </g> <!-- /g-inner -->
+
+            <!-- Front paws -->
+            <ellipse cx="40" cy="139" rx="10" ry="6" fill="#1E1E30"/>
+            <ellipse cx="60" cy="139" rx="10" ry="6" fill="#1E1E30"/>
+            <ellipse cx="40" cy="138" rx="8"  ry="4.5" fill="#16162A"/>
+            <ellipse cx="60" cy="138" rx="8"  ry="4.5" fill="#16162A"/>
+
+            <!-- Floating heart (petting reward) -->
+            <g id="g-heart">
+              <text x="78" y="18" font-size="15" text-anchor="middle"
+                    style="user-select:none;font-family:sans-serif">💕</text>
+            </g>
+
+          </svg>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Task input -->
-  <div>
-    <div class="input-area">
-      <input type="text" class="task-input" id="task-input"
-             placeholder="Add a task for Mochi…" autocomplete="off"
-             aria-label="New task">
-      <button class="btn-add" id="btn-add">+ Add</button>
-    </div>
-    <p class="input-hint">
-      Include <b>#walk</b> or <b>#feed</b> to fill the meters —
-      or just type <b>walk</b>, <b>feed</b>, <b>treat</b>, etc.
-    </p>
-  </div>
-
-  <!-- Task list -->
-  <div class="tasks-section" id="task-list" aria-live="polite"></div>
-
-  <!-- Footer -->
-  <div class="footer-row">
-    <button class="btn-reset" id="btn-reset">↺ New day — reset meters</button>
   </div>
 
 </div>
@@ -498,175 +471,229 @@ body {
   'use strict';
 
   // ── State ──────────────────────────────────────────────────────────────
-  var tasks = [];
-  var walkMeter = 0;
-  var feedMeter = 0;
+  var tasks         = [];
+  var fishCount     = 0;
+  var pendingRewards = 0;
 
+  var catState  = 'walking'; // walking | sitting | eating | petting | playing
+  var catX      = 20;
+  var catDir    = 1;   // 1 = right, -1 = left
+  var rafId     = null;
+  var stateTimer = null;
+
+  // ── Persistence ────────────────────────────────────────────────────────
   function load() {
     try {
-      tasks     = JSON.parse(localStorage.getItem('mochi-tasks') || '[]');
-      walkMeter = parseFloat(localStorage.getItem('mochi-walk')  || '0');
-      feedMeter = parseFloat(localStorage.getItem('mochi-feed')  || '0');
-    } catch (_) {
-      tasks = []; walkMeter = 0; feedMeter = 0;
-    }
+      tasks     = JSON.parse(localStorage.getItem('jiji-tasks') || '[]');
+      fishCount = parseInt(localStorage.getItem('jiji-fish')  || '0', 10);
+    } catch (_) { tasks = []; fishCount = 0; }
   }
 
   function save() {
-    localStorage.setItem('mochi-tasks', JSON.stringify(tasks));
-    localStorage.setItem('mochi-walk',  String(walkMeter));
-    localStorage.setItem('mochi-feed',  String(feedMeter));
-  }
-
-  // ── Tag detection ───────────────────────────────────────────────────────
-  function detectTag(text) {
-    var t = text.toLowerCase();
-    if (/#walk\b/.test(t) || /\bwalk\b/.test(t) || /\bhike\b/.test(t) || /\brun\b/.test(t)) return 'walk';
-    if (/#feed\b/.test(t) || /\bfeed\b/.test(t) || /\bfood\b/.test(t) ||
-        /\btreat\b/.test(t) || /\bmeal\b/.test(t) || /\bwater\b/.test(t) ||
-        /\bkibble\b/.test(t)) return 'feed';
-    return null;
+    localStorage.setItem('jiji-tasks', JSON.stringify(tasks));
+    localStorage.setItem('jiji-fish',  String(fishCount));
   }
 
   // ── Task operations ─────────────────────────────────────────────────────
   function addTask(text) {
     text = text.trim();
     if (!text) return;
-    tasks.unshift({ id: Date.now(), text: text, tag: detectTag(text), done: false });
+    tasks.unshift({ id: Date.now(), text: text, done: false });
+    save(); render();
+  }
+
+  function completeTask(id) {
+    var t = tasks.find(function (x) { return x.id === id; });
+    if (!t || t.done) return;
+    t.done = true;
+    fishCount++;
+    pendingRewards++;
     save();
+    setCatState('sitting');
+    updateRewardUI();
     render();
   }
 
-  function toggleTask(id) {
-    var task = tasks.find(function (t) { return t.id === id; });
-    if (!task) return;
-    task.done = !task.done;
-    if (task.done) {
-      if (task.tag === 'walk') walkMeter = Math.min(100, walkMeter + 20);
-      if (task.tag === 'feed') feedMeter = Math.min(100, feedMeter + 25);
-      triggerBounce();
-    }
-    save();
-    render();
+  function undoTask(id) {
+    var t = tasks.find(function (x) { return x.id === id; });
+    if (!t) return;
+    t.done = !t.done;
+    save(); render();
   }
 
   function removeTask(id) {
-    tasks = tasks.filter(function (t) { return t.id !== id; });
-    save();
-    render();
+    tasks = tasks.filter(function (x) { return x.id !== id; });
+    save(); render();
   }
 
-  // ── Animations ─────────────────────────────────────────────────────────
-  var bounceTimer = null;
-
-  function triggerBounce() {
-    var stage = document.getElementById('dog-stage');
-    stage.classList.remove('dog-bouncing', 'tail-wagging');
-    void stage.offsetWidth; // force reflow
-    stage.classList.add('dog-bouncing', 'tail-wagging');
-    clearTimeout(bounceTimer);
-    bounceTimer = setTimeout(function () {
-      stage.classList.remove('dog-bouncing', 'tail-wagging');
-    }, 1300);
+  // ── Reward system ───────────────────────────────────────────────────────
+  function updateRewardUI() {
+    var strip = document.getElementById('reward-strip');
+    if (pendingRewards > 0) {
+      strip.classList.add('on');
+      var suffix = pendingRewards > 1 ? ' (' + pendingRewards + ' pending)' : '';
+      document.getElementById('reward-lbl').textContent =
+        '✨ Task done! How should Jiji celebrate?' + suffix;
+    } else {
+      strip.classList.remove('on');
+    }
   }
 
-  // ── Mood logic ─────────────────────────────────────────────────────────
-  function isSad() {
-    return (walkMeter > 0 || feedMeter > 0) && walkMeter < 30 && feedMeter < 30;
+  function claimReward(type) {
+    pendingRewards = Math.max(0, pendingRewards - 1);
+    updateRewardUI();
+
+    if (type === 'feed')  startFeed();
+    else if (type === 'pet')  startPet();
+    else if (type === 'play') startPlay();
   }
 
-  function moodText() {
-    var wHigh = walkMeter >= 70, fHigh = feedMeter >= 70;
-    var wMid  = walkMeter >= 40, fMid  = feedMeter >= 40;
-    if (isSad())              return 'I need a walk AND some food… 🥺';
-    if (wHigh && fHigh)       return 'Best. Day. Ever! 🎉';
-    if (wHigh && !fMid)       return 'Great walk! But I’m hungry… 🦴';
-    if (fHigh && !wMid)       return 'Fed and ready to go outside! 🦸';
-    if (wHigh)                return 'That walk was wonderful! 🌿';
-    if (fHigh)                return 'Nom nom, so good! 😋';
-    if (wMid || fMid)         return 'Feeling pretty good! 🐾';
-    return 'What are we doing today?';
+  // ── Cat expressions ─────────────────────────────────────────────────────
+  function setFace(preset) {
+    // preset: 'default' | 'eating' | 'petting'
+    var eyesOpen   = document.getElementById('g-eyes');
+    var eyesClosed = document.getElementById('g-eyes-closed');
+    var mouthHappy = document.getElementById('g-mouth-happy');
+    var mouthEat   = document.getElementById('g-mouth-eat');
+    var mouthPet   = document.getElementById('g-mouth-pet');
+
+    eyesOpen.style.display   = '';
+    eyesClosed.style.display = 'none';
+    mouthHappy.style.display = '';
+    mouthEat.style.display   = 'none';
+    mouthPet.style.display   = 'none';
+
+    if (preset === 'eating') {
+      mouthHappy.style.display = 'none';
+      mouthEat.style.display   = '';
+    } else if (preset === 'petting') {
+      eyesOpen.style.display   = 'none';
+      eyesClosed.style.display = '';
+      mouthHappy.style.display = 'none';
+      mouthPet.style.display   = '';
+    }
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────
+  // ── Cat state machine ────────────────────────────────────────────────────
+  function setCatState(s) {
+    catState = s;
+    var pos = document.getElementById('cat-pos');
+    // Preserve facing direction
+    var wasLeft = pos.classList.contains('facing-left');
+    pos.className = s + (wasLeft ? ' facing-left' : '');
+
+    if (s === 'petting') setFace('petting');
+    else if (s === 'eating') setFace('eating');
+    else setFace('default');
+  }
+
+  function startFeed() {
+    setCatState('eating');
+    clearTimeout(stateTimer);
+    stateTimer = setTimeout(afterRewardAnim, 2600);
+  }
+  function startPet() {
+    setCatState('petting');
+    clearTimeout(stateTimer);
+    stateTimer = setTimeout(afterRewardAnim, 3000);
+  }
+  function startPlay() {
+    setCatState('playing');
+    clearTimeout(stateTimer);
+    stateTimer = setTimeout(afterRewardAnim, 1200);
+  }
+
+  function afterRewardAnim() {
+    if (pendingRewards > 0) {
+      setCatState('sitting');
+    } else {
+      setCatState('walking');
+      startWalk();
+    }
+  }
+
+  // ── Walking engine ────────────────────────────────────────────────────────
+  function startWalk() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(step);
+  }
+
+  function step() {
+    if (catState !== 'walking') return;
+    var stage  = document.getElementById('cat-stage');
+    var maxX   = stage.offsetWidth - 82; // cat render width ~78 + margin
+    catX += catDir * 1.3;
+    if (catX >= maxX) { catX = maxX; catDir = -1; applyDir(); }
+    if (catX <= 0)    { catX = 0;    catDir =  1; applyDir(); }
+    document.getElementById('cat-pos').style.left = catX + 'px';
+    rafId = requestAnimationFrame(step);
+  }
+
+  function applyDir() {
+    var pos = document.getElementById('cat-pos');
+    if (catDir === -1) pos.classList.add('facing-left');
+    else               pos.classList.remove('facing-left');
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────────
   function render() {
-    // Meters
-    document.getElementById('walk-bar').style.width = walkMeter + '%';
-    document.getElementById('feed-bar').style.width = feedMeter + '%';
-    document.getElementById('walk-pct').textContent  = Math.round(walkMeter) + '%';
-    document.getElementById('feed-pct').textContent  = Math.round(feedMeter) + '%';
+    document.getElementById('fish-num').textContent = fishCount;
 
-    // Dog state
-    var sad = isSad();
-    document.getElementById('eyes-happy').style.display  = sad ? 'none' : '';
-    document.getElementById('eyes-sad').style.display    = sad ? '' : 'none';
-    document.getElementById('mouth-happy').style.display = sad ? 'none' : '';
-    document.getElementById('mouth-sad').style.display   = sad ? '' : 'none';
-    document.getElementById('dog-mood').textContent = moodText();
-
-    // Task list
     var listEl = document.getElementById('task-list');
     if (!tasks.length) {
-      listEl.innerHTML = '<div class="empty-state">Nothing yet — give Mochi something to do!</div>';
+      listEl.innerHTML = '<div class="empty-state">No tasks yet — add one for Jiji!</div>';
       return;
     }
-
-    listEl.innerHTML = tasks.map(function (task) {
-      var safeText = esc(task.text);
-      var checkMark = task.done ? '✓' : '';
-      var badge = task.tag
-        ? '<span class="task-badge ' + task.tag + '">' + task.tag + '</span>'
-        : '';
+    listEl.innerHTML = tasks.map(function (t) {
+      var chk = t.done ? '✓' : '';
+      var lbl = t.done ? 'Undo' : 'Complete';
       return (
-        '<div class="task-item' + (task.done ? ' done' : '') + '">' +
-          '<button class="check-btn" onclick="app.toggle(' + task.id + ')" ' +
-                  'aria-label="' + (task.done ? 'Unmark' : 'Complete') + ' task">' +
-                  checkMark + '</button>' +
-          '<span class="task-label">' + safeText + '</span>' +
-          badge +
-          '<button class="del-btn" onclick="app.remove(' + task.id + ')" ' +
-                  'aria-label="Delete task">\xD7</button>' +
+        '<div class="task-item' + (t.done ? ' done' : '') + '">' +
+          '<button class="chk-btn" onclick="cat.check(' + t.id + ')" aria-label="' + lbl + ' task">' + chk + '</button>' +
+          '<span class="task-lbl">' + esc(t.text) + '</span>' +
+          '<button class="del-btn" onclick="cat.del(' + t.id + ')" aria-label="Delete task">\xD7</button>' +
         '</div>'
       );
     }).join('');
   }
 
-  function esc(str) {
-    return String(str)
-      .replace(/&/g,  '&amp;')
-      .replace(/</g,  '&lt;')
-      .replace(/>/g,  '&gt;')
-      .replace(/"/g,  '&quot;')
-      .replace(/'/g,  '&#39;');
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
 
-  // ── Events ─────────────────────────────────────────────────────────────
-  var inputEl = document.getElementById('task-input');
+  // ── Events ────────────────────────────────────────────────────────────────
+  var inp = document.getElementById('task-input');
 
-  function submitTask() {
-    var val = inputEl.value.trim();
-    if (val) { addTask(val); inputEl.value = ''; }
-    inputEl.focus();
+  function submit() {
+    var v = inp.value.trim();
+    if (v) { addTask(v); inp.value = ''; }
+    inp.focus();
   }
 
-  inputEl.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') submitTask();
-  });
-  document.getElementById('btn-add').addEventListener('click', submitTask);
+  inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+  document.getElementById('btn-add').addEventListener('click', submit);
+  document.getElementById('btn-feed').addEventListener('click', function () { claimReward('feed'); });
+  document.getElementById('btn-pet').addEventListener('click',  function () { claimReward('pet');  });
+  document.getElementById('btn-play').addEventListener('click', function () { claimReward('play'); });
 
-  document.getElementById('btn-reset').addEventListener('click', function () {
-    walkMeter = 0;
-    feedMeter = 0;
-    save();
-    render();
-  });
+  // ── Public API for inline handlers ────────────────────────────────────────
+  window.cat = {
+    check: function (id) {
+      var t = tasks.find(function (x) { return x.id === id; });
+      if (!t) return;
+      if (t.done) undoTask(id);
+      else completeTask(id);
+    },
+    del: removeTask
+  };
 
-  // ── Public API for inline onclick handlers ─────────────────────────────
-  window.app = { toggle: toggleTask, remove: removeTask };
-
-  // ── Boot ───────────────────────────────────────────────────────────────
+  // ── Boot ──────────────────────────────────────────────────────────────────
   load();
   render();
+  setCatState('walking');
+  startWalk();
 }());
 </script>
 </body>
