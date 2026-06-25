@@ -13,52 +13,61 @@
   --txt:#2A3428;--sub:#6A7860;--card:#FAFDF5;--brd:#C8DEB8;
   --rnd:18px;--sh:0 4px 24px rgba(40,70,30,.10);
 }
-[data-char="chibi"]{--acc:#B88820;--acc2:#D4AA40;--gnd:#F4ECD4;--srf:#FDF6EC;--txt:#3A2818;--sub:#7A5828;--brd:#E8D8A0;--card:#FFFAF0;}
-[data-char="jiji"] {--acc:#7060A0;--acc2:#A090C8;--gnd:#E8E4F4;--srf:#F4F2FC;--txt:#1A1828;--sub:#5848A0;--brd:#C8C0E4;--card:#F8F6FF;}
+[data-char="chibi"]{--acc:#B88820;--acc2:#D4AA40;--gnd:#F0EAD0;--srf:#FDF6EC;--txt:#3A2818;--sub:#7A5828;--brd:#E8D8A0;--card:#FFFAF0;}
+[data-char="jiji"] {--acc:#8070B8;--acc2:#A898D8;--gnd:#E4E0F4;--srf:#F4F2FC;--txt:#1A1828;--sub:#6050A0;--brd:#C8C0E4;--card:#F8F6FF;}
 body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px 16px;}
 
 /* ══ SELECTION SCREEN ══════════════════════════════════════════════ */
 #sel-screen{
   position:fixed;inset:0;z-index:100;
-  background:linear-gradient(168deg,#B8D8F0 0%,#D4EAB8 55%,#C8E4A0 100%);
+  background:linear-gradient(168deg,#18202C 0%,#242E20 55%,#1C2A18 100%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  overflow:hidden;gap:20px;
+  overflow:hidden;gap:22px;
 }
 #sel-screen.hide{animation:fade-out .5s ease forwards;pointer-events:none;}
 @keyframes fade-out{to{opacity:0;transform:scale(.97);}}
 
 .sel-title{
   font-family:'Comfortaa',cursive;font-size:clamp(20px,5vw,30px);font-weight:700;
-  color:#2A4828;text-align:center;line-height:1.4;
+  color:#E8EEE0;text-align:center;line-height:1.4;text-shadow:0 2px 12px rgba(0,0,0,.4);
 }
-.sel-title em{color:#527848;font-style:normal;}
-.sel-sub{font-size:13px;color:#4A6840;text-align:center;font-style:italic;margin-top:-10px;}
+.sel-title em{color:#A8D888;font-style:normal;}
+.sel-sub{font-size:13px;color:#8AA880;text-align:center;font-style:italic;margin-top:-12px;}
 
-.sel-cards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:0 12px;}
+.sel-cards{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding:0 12px;}
 
 .sel-card{
-  background:rgba(255,255,255,.84);backdrop-filter:blur(8px);
-  border:2px solid rgba(255,255,255,.9);border-radius:22px;
-  padding:16px 12px 12px;width:116px;
-  display:flex;flex-direction:column;align-items:center;gap:7px;
-  cursor:pointer;box-shadow:0 6px 24px rgba(40,80,30,.12);
+  background:rgba(20,24,32,.75);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(140,180,120,.25);border-radius:22px;
+  padding:14px 12px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;box-shadow:0 6px 32px rgba(0,0,0,.4),0 0 0 0 rgba(140,200,120,0);
   animation:card-float 3s ease-in-out infinite;
-  transition:box-shadow .2s,border-color .2s;
+  transition:box-shadow .25s,border-color .25s,transform .25s;
 }
 .sel-card:nth-child(2){animation-delay:-1s;}
 .sel-card:nth-child(3){animation-delay:-2s;}
-.sel-card:hover{animation-play-state:paused;transform:translateY(-7px) scale(1.04)!important;box-shadow:0 16px 40px rgba(40,80,30,.22);border-color:rgba(80,190,80,.55);}
+.sel-card:hover{
+  animation-play-state:paused;
+  transform:translateY(-8px) scale(1.05)!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 20px rgba(140,200,120,.2);
+  border-color:rgba(160,220,140,.5);
+}
 @keyframes card-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 
-.sel-card-name{font-family:'Comfortaa',cursive;font-size:14px;font-weight:700;color:#2A3428;}
-.sel-card-role{font-size:11px;color:#6A8060;text-align:center;line-height:1.4;}
+.sel-preview{
+  background-repeat:no-repeat;background-color:transparent;
+  border-radius:8px;
+}
+.sel-card-name{font-family:'Comfortaa',cursive;font-size:14px;font-weight:700;color:#E8EEE0;}
+.sel-card-role{font-size:11px;color:#8AA880;text-align:center;line-height:1.4;}
 
 .sparkle{
-  position:absolute;width:7px;height:7px;border-radius:50%;
+  position:absolute;width:6px;height:6px;border-radius:50%;
   background:radial-gradient(circle,#FFE860,#FFCC00 60%,transparent);
   animation:sp-drift var(--d,4s) var(--dl,0s) ease-in-out infinite;opacity:0;
 }
-@keyframes sp-drift{0%{opacity:0;transform:translateY(0) scale(.4);}30%{opacity:.85;transform:translateY(-22px) scale(1);}70%{opacity:.5;transform:translateY(-52px) scale(.8);}100%{opacity:0;transform:translateY(-80px) scale(.2);}}
+@keyframes sp-drift{0%{opacity:0;transform:translateY(0) scale(.4);}30%{opacity:.9;transform:translateY(-22px) scale(1);}70%{opacity:.5;transform:translateY(-52px) scale(.8);}100%{opacity:0;transform:translateY(-80px) scale(.2);}}
 
 /* ══ APP ════════════════════════════════════════════════════════════ */
 .app{width:100%;max-width:380px;display:none;flex-direction:column;gap:14px;}
@@ -67,10 +76,9 @@ body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:0 4px;}
 .hdr-title{font-family:'Comfortaa',cursive;font-size:22px;font-weight:700;color:var(--acc);}
 .btn-switch{
-  font-size:12px;font-family:'Nunito',sans-serif;
-  background:var(--card);color:var(--acc);
-  border:1.5px solid var(--brd);border-radius:20px;
-  padding:5px 12px;cursor:pointer;transition:background .15s,transform .1s;
+  font-size:12px;font-family:'Nunito',sans-serif;background:var(--card);color:var(--acc);
+  border:1.5px solid var(--brd);border-radius:20px;padding:5px 12px;cursor:pointer;
+  transition:background .15s,transform .1s;
 }
 .btn-switch:hover{background:var(--brd);transform:scale(1.04);}
 
@@ -89,34 +97,38 @@ body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-
 .reward-btn:disabled{opacity:.38;cursor:default;}
 
 .char-stage{
-  height:190px;position:relative;overflow:hidden;
-  background:var(--gnd);transition:background .6s;
+  height:200px;position:relative;overflow:hidden;
 }
-[data-char="totoro"] .char-stage{background:linear-gradient(180deg,#C8E4A8 0%,#E4EED4 62%,#D4CC98 100%);}
-[data-char="chibi"]  .char-stage{background:linear-gradient(180deg,#D8EAF8 0%,#F4ECD4 62%,#D8C880 100%);}
-[data-char="jiji"]   .char-stage{background:linear-gradient(180deg,#2A2840 0%,#4A4060 58%,#6A5888 100%);}
+/* Dark atmospheric stages that complement the PNG art backgrounds */
+[data-char="totoro"] .char-stage{background:linear-gradient(180deg,#1C2A1C 0%,#243020 55%,#1C2418 100%);}
+[data-char="chibi"]  .char-stage{background:linear-gradient(180deg,#18202C 0%,#202838 55%,#181E2C 100%);}
+[data-char="jiji"]   .char-stage{background:linear-gradient(180deg,#100E1C 0%,#18162A 55%,#100E1C 100%);}
 
-.char-stage::after{content:'';position:absolute;bottom:30px;left:0;right:0;height:2px;background:rgba(0,0,0,.07);border-radius:2px;}
+/* Subtle ground glow per character */
+[data-char="totoro"] .char-stage::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(0deg,rgba(60,100,40,.25),transparent);}
+[data-char="chibi"]  .char-stage::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(0deg,rgba(40,60,100,.25),transparent);}
+[data-char="jiji"]   .char-stage::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(0deg,rgba(80,60,120,.25),transparent);}
 
-#char-pos{position:absolute;bottom:18px;left:0;width:120px;}
+#char-pos{position:absolute;bottom:14px;left:0;}
 #char-inner{display:flex;align-items:flex-end;justify-content:center;transform-origin:bottom center;}
 #char-flip{transform-origin:center bottom;}
 #char-flip.facing-left{transform:scaleX(-1);}
+#char-sprite{background-repeat:no-repeat;background-color:transparent;flex-shrink:0;}
 
 /* ══ WALK ANIMATIONS ════════════════════════════════════════════════ */
-@keyframes waddle{0%,100%{transform:rotate(-2.5deg) translateY(0);}25%{transform:rotate(0deg) translateY(-5px);}50%{transform:rotate(2.5deg) translateY(0);}75%{transform:rotate(0deg) translateY(-3px);}}
-@keyframes chibi-hop{0%,100%{transform:translateY(0) rotate(0);}20%{transform:translateY(-9px) rotate(-5deg);}50%{transform:translateY(0) rotate(0);}70%{transform:translateY(-7px) rotate(5deg);}}
-@keyframes jiji-trot{0%,100%{transform:translateY(0);}25%{transform:translateY(-4px) scaleX(.97);}75%{transform:translateY(-3px) scaleX(1.02);}}
+@keyframes waddle{0%,100%{transform:rotate(-2deg) translateY(0);}25%{transform:rotate(0deg) translateY(-6px);}50%{transform:rotate(2deg) translateY(0);}75%{transform:rotate(0deg) translateY(-4px);}}
+@keyframes chibi-hop{0%,100%{transform:translateY(0) rotate(0);}20%{transform:translateY(-10px) rotate(-4deg);}50%{transform:translateY(0) rotate(0);}70%{transform:translateY(-8px) rotate(4deg);}}
+@keyframes jiji-trot{0%,100%{transform:translateY(0);}25%{transform:translateY(-5px) scaleX(.97);}75%{transform:translateY(-4px) scaleX(1.02);}}
 
-[data-char="totoro"] .walking #char-inner{animation:waddle .44s ease-in-out infinite;}
-[data-char="chibi"]  .walking #char-inner{animation:chibi-hop .5s ease-in-out infinite;}
-[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .38s ease-in-out infinite;}
+[data-char="totoro"] .walking #char-inner{animation:waddle .46s ease-in-out infinite;}
+[data-char="chibi"]  .walking #char-inner{animation:chibi-hop .52s ease-in-out infinite;}
+[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-out infinite;}
 
 @keyframes sit-breathe{0%,100%{transform:scaleY(1);}50%{transform:scaleY(.97);}}
-@keyframes sleep-tilt{to{transform:rotate(22deg) translateY(9px);}}
-@keyframes sleep-breathe{0%,100%{transform:rotate(22deg) translateY(9px) scaleX(.99);}50%{transform:rotate(22deg) translateY(9px) scaleX(1.01);}}
-@keyframes eat-nod{0%,100%{transform:rotate(0);}33%{transform:rotate(9deg);}66%{transform:rotate(-5deg);}}
-@keyframes pet-sway{0%,100%{transform:rotate(0);}50%{transform:rotate(-13deg);}}
+@keyframes sleep-tilt{to{transform:rotate(20deg) translateY(10px);}}
+@keyframes sleep-breathe{0%,100%{transform:rotate(20deg) translateY(10px) scaleX(.99);}50%{transform:rotate(20deg) translateY(10px) scaleX(1.01);}}
+@keyframes eat-nod{0%,100%{transform:rotate(0);}33%{transform:rotate(8deg);}66%{transform:rotate(-5deg);}}
+@keyframes pet-sway{0%,100%{transform:rotate(0);}50%{transform:rotate(-12deg);}}
 @keyframes roar-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
 
 .sitting    #char-inner{animation:sit-breathe 3.2s ease-in-out infinite;}
@@ -129,7 +141,7 @@ body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-
 /* ══ FLOATS ═════════════════════════════════════════════════════════ */
 .float-el{position:absolute;pointer-events:none;animation:float-up 1.4s ease-out forwards;font-size:22px;z-index:10;}
 @keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1);}70%{opacity:.9;transform:translateY(-54px) scale(1.2);}100%{opacity:0;transform:translateY(-84px) scale(.7);}}
-.zzz-el{position:absolute;pointer-events:none;font-family:'Space Mono',monospace;color:var(--acc2);font-size:13px;font-weight:700;animation:zzz-drift 2.4s ease-out infinite;}
+.zzz-el{position:absolute;pointer-events:none;font-family:'Space Mono',monospace;color:#8ABCDC;font-size:13px;font-weight:700;animation:zzz-drift 2.4s ease-out infinite;}
 @keyframes zzz-drift{0%{opacity:0;transform:translate(0,0) scale(.5);}25%{opacity:.9;}100%{opacity:0;transform:translate(22px,-32px) scale(1);}}
 
 /* ══ METERS ═════════════════════════════════════════════════════════ */
@@ -160,7 +172,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-
 .task-del{background:none;border:none;color:var(--sub);font-size:18px;cursor:pointer;line-height:1;opacity:.45;transition:opacity .15s;padding:0 2px;}
 .task-del:hover{opacity:1;}
 .empty-state{text-align:center;padding:20px 10px;color:var(--sub);font-size:14px;font-style:italic;}
-
 .tally-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-top:1px solid var(--brd);font-size:13px;color:var(--sub);}
 .tally-val{font-family:'Space Mono',monospace;font-weight:700;color:var(--acc);}
 </style>
@@ -183,99 +194,44 @@ body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-
 
   <div class="sel-cards">
 
-    <!-- TOTORO CARD -->
+    <!-- TOTORO — uses totoro1.png left half (default calm Totoro) -->
     <div class="sel-card" onclick="selectChar('totoro')">
-      <svg viewBox="0 0 160 200" width="82" height="103">
-        <ellipse cx="42" cy="40" rx="13" ry="22" fill="#7A8A84" transform="rotate(-12,42,40)"/>
-        <ellipse cx="118" cy="40" rx="13" ry="22" fill="#7A8A84" transform="rotate(12,118,40)"/>
-        <ellipse cx="42" cy="44" rx="7.5" ry="13" fill="#9AABA4" transform="rotate(-12,42,44)"/>
-        <ellipse cx="118" cy="44" rx="7.5" ry="13" fill="#9AABA4" transform="rotate(12,118,44)"/>
-        <ellipse cx="80" cy="126" rx="52" ry="62" fill="#7A8A84"/>
-        <circle cx="80" cy="78" r="44" fill="#7A8A84"/>
-        <ellipse cx="80" cy="147" rx="38" ry="34" fill="#D4E8B2"/>
-        <ellipse cx="68" cy="127" rx="6" ry="2.8" fill="#4E6050" transform="rotate(-22,68,127)"/>
-        <ellipse cx="92" cy="127" rx="6" ry="2.8" fill="#4E6050" transform="rotate(22,92,127)"/>
-        <ellipse cx="57" cy="142" rx="6" ry="2.8" fill="#4E6050" transform="rotate(-32,57,142)"/>
-        <ellipse cx="80" cy="140" rx="6" ry="2.8" fill="#4E6050"/>
-        <ellipse cx="103" cy="142" rx="6" ry="2.8" fill="#4E6050" transform="rotate(32,103,142)"/>
-        <ellipse cx="66" cy="157" rx="5.5" ry="2.8" fill="#4E6050" transform="rotate(-22,66,157)"/>
-        <ellipse cx="94" cy="157" rx="5.5" ry="2.8" fill="#4E6050" transform="rotate(22,94,157)"/>
-        <ellipse cx="36" cy="90" rx="14" ry="9" fill="#E88888" opacity=".35"/>
-        <ellipse cx="124" cy="90" rx="14" ry="9" fill="#E88888" opacity=".35"/>
-        <circle cx="62" cy="74" r="14" fill="#F0F4EE"/>
-        <circle cx="98" cy="74" r="14" fill="#F0F4EE"/>
-        <circle cx="65" cy="76" r="9.5" fill="#1C1C14"/>
-        <circle cx="101" cy="76" r="9.5" fill="#1C1C14"/>
-        <circle cx="68" cy="72" r="4.5" fill="white"/>
-        <circle cx="104" cy="72" r="4.5" fill="white"/>
-        <ellipse cx="80" cy="91" rx="5" ry="4" fill="#2E302A"/>
-        <path d="M73,97 Q80,102 87,97" stroke="#2E302A" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <line x1="26" y1="88" x2="54" y2="92" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-        <line x1="26" y1="95" x2="55" y2="94" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-        <line x1="134" y1="88" x2="106" y2="92" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-        <line x1="134" y1="95" x2="105" y2="94" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-        <ellipse cx="21" cy="123" rx="15" ry="9" fill="#6E7E78" transform="rotate(-30,21,123)"/>
-        <ellipse cx="139" cy="123" rx="15" ry="9" fill="#6E7E78" transform="rotate(30,139,123)"/>
-        <ellipse cx="62" cy="176" rx="22" ry="11" fill="#6E7E78"/>
-        <ellipse cx="98" cy="176" rx="22" ry="11" fill="#6E7E78"/>
-      </svg>
+      <!-- totoro1.png: 878×420, left half = one Totoro at 439×420
+           display at h=110: scale=110/420=0.262, w=439×0.262=115px, full=878×0.262=230px -->
+      <div class="sel-preview" style="
+        width:115px;height:110px;
+        background-image:url('totoro1.png');
+        background-size:230px 110px;
+        background-position:0 0;">
+      </div>
       <div class="sel-card-name">Totoro</div>
       <div class="sel-card-role">Forest Spirit</div>
     </div>
 
-    <!-- CHIBI CARD -->
+    <!-- CHIBI — uses duck4.png (single cute expression) -->
     <div class="sel-card" onclick="selectChar('chibi')">
-      <svg viewBox="0 0 160 200" width="82" height="103">
-        <ellipse cx="80" cy="133" rx="54" ry="57" fill="#E8C466"/>
-        <ellipse cx="80" cy="149" rx="36" ry="32" fill="#F4E8C0"/>
-        <ellipse cx="22" cy="138" rx="16" ry="10" fill="#D4A840" transform="rotate(-28,22,138)"/>
-        <ellipse cx="138" cy="138" rx="16" ry="10" fill="#D4A840" transform="rotate(28,138,138)"/>
-        <ellipse cx="76" cy="74" rx="46" ry="12" fill="#3E6E6A" transform="rotate(-7,76,74)" opacity=".92"/>
-        <ellipse cx="72" cy="61" rx="40" ry="17" fill="#6A9090" transform="rotate(-9,72,61)"/>
-        <ellipse cx="69" cy="52" rx="30" ry="13" fill="#8AACAA" transform="rotate(-10,69,52)"/>
-        <circle cx="60" cy="43" r="7" fill="#F4F0E8"/>
-        <ellipse cx="36" cy="110" rx="16" ry="10" fill="#F09090" opacity=".44"/>
-        <ellipse cx="124" cy="110" rx="16" ry="10" fill="#F09090" opacity=".44"/>
-        <circle cx="62" cy="103" r="13" fill="#F4F4F0"/>
-        <circle cx="98" cy="103" r="13" fill="#F4F4F0"/>
-        <circle cx="65" cy="105" r="8" fill="#1C1C14"/>
-        <circle cx="101" cy="105" r="8" fill="#1C1C14"/>
-        <circle cx="67" cy="102" r="4" fill="white"/>
-        <circle cx="103" cy="102" r="4" fill="white"/>
-        <path d="M71,117 Q80,125 89,117 Q84,123 76,123 Z" fill="#E07848"/>
-        <ellipse cx="64" cy="179" rx="18" ry="9" fill="#E07848"/>
-        <ellipse cx="96" cy="179" rx="18" ry="9" fill="#E07848"/>
-      </svg>
+      <!-- duck4.png: 372×302, single image
+           display at h=110: scale=110/302=0.364, w=372×0.364=135px -->
+      <div class="sel-preview" style="
+        width:135px;height:110px;
+        background-image:url('duck4.png');
+        background-size:135px 110px;
+        background-position:0 0;">
+      </div>
       <div class="sel-card-name">Chibi</div>
       <div class="sel-card-role">Explorer Duck</div>
     </div>
 
-    <!-- JIJI CARD -->
+    <!-- JIJI — uses jiji3.png (clean single Jiji) -->
     <div class="sel-card" onclick="selectChar('jiji')">
-      <svg viewBox="0 0 160 200" width="82" height="103">
-        <path d="M104,168 C132,152 150,128 138,106 C132,92 116,88 112,100 C108,112 122,118 118,132 C114,144 100,150 100,164" stroke="#3C3A4A" stroke-width="12" fill="none" stroke-linecap="round"/>
-        <ellipse cx="80" cy="158" rx="35" ry="32" fill="#3C3A4A"/>
-        <ellipse cx="80" cy="148" rx="18" ry="15" fill="#5A5868"/>
-        <polygon points="40,64 26,14 62,50" fill="#3C3A4A"/>
-        <polygon points="120,64 134,14 98,50" fill="#3C3A4A"/>
-        <circle cx="80" cy="88" r="52" fill="#3C3A4A"/>
-        <polygon points="40,60 31,22 60,47" fill="#B888C4" opacity=".9"/>
-        <polygon points="120,60 129,22 100,47" fill="#B888C4" opacity=".9"/>
-        <circle cx="62" cy="84" r="18" fill="#F0EEF4"/>
-        <circle cx="98" cy="84" r="18" fill="#F0EEF4"/>
-        <circle cx="65" cy="87" r="12" fill="#1A1828"/>
-        <circle cx="101" cy="87" r="12" fill="#1A1828"/>
-        <circle cx="69" cy="82" r="5.5" fill="white"/>
-        <circle cx="105" cy="82" r="5.5" fill="white"/>
-        <ellipse cx="80" cy="103" rx="5" ry="4" fill="#C860A0"/>
-        <path d="M74,108 Q80,112 86,108" stroke="#C860A0" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-        <line x1="22" y1="100" x2="56" y2="103" stroke="#A0A0B0" stroke-width="1.2"/>
-        <line x1="22" y1="108" x2="57" y2="108" stroke="#A0A0B0" stroke-width="1.2"/>
-        <line x1="138" y1="100" x2="104" y2="103" stroke="#A0A0B0" stroke-width="1.2"/>
-        <line x1="138" y1="108" x2="103" y2="108" stroke="#A0A0B0" stroke-width="1.2"/>
-        <ellipse cx="62" cy="182" rx="20" ry="10" fill="#3C3A4A"/>
-        <ellipse cx="98" cy="182" rx="20" ry="10" fill="#3C3A4A"/>
-      </svg>
+      <!-- jiji3.png: 298×366, single image
+           display at h=110: scale=110/366=0.301, w=298×0.301=90px -->
+      <div class="sel-preview" style="
+        width:90px;height:110px;
+        background-image:url('jiji3.png');
+        background-size:90px 110px;
+        background-position:0 0;">
+      </div>
       <div class="sel-card-name">Jiji</div>
       <div class="sel-card-role">Witch's Cat</div>
     </div>
@@ -308,155 +264,7 @@ body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-
       <div id="char-pos">
         <div id="char-inner">
           <div id="char-flip">
-
-            <svg id="char-svg" viewBox="0 0 160 200" width="120" height="150">
-
-              <!-- ══ TOTORO ══ -->
-              <g id="c-totoro">
-                <ellipse cx="42" cy="40" rx="13" ry="22" fill="#7A8A84" transform="rotate(-12,42,40)"/>
-                <ellipse cx="118" cy="40" rx="13" ry="22" fill="#7A8A84" transform="rotate(12,118,40)"/>
-                <ellipse cx="42" cy="44" rx="7.5" ry="13" fill="#9AABA4" transform="rotate(-12,42,44)"/>
-                <ellipse cx="118" cy="44" rx="7.5" ry="13" fill="#9AABA4" transform="rotate(12,118,44)"/>
-                <ellipse cx="80" cy="126" rx="52" ry="62" fill="#7A8A84"/>
-                <circle cx="80" cy="78" r="44" fill="#7A8A84"/>
-                <ellipse cx="80" cy="147" rx="38" ry="34" fill="#D4E8B2"/>
-                <ellipse cx="68" cy="127" rx="6" ry="2.8" fill="#4E6050" transform="rotate(-22,68,127)"/>
-                <ellipse cx="92" cy="127" rx="6" ry="2.8" fill="#4E6050" transform="rotate(22,92,127)"/>
-                <ellipse cx="57" cy="142" rx="6" ry="2.8" fill="#4E6050" transform="rotate(-32,57,142)"/>
-                <ellipse cx="80" cy="140" rx="6" ry="2.8" fill="#4E6050"/>
-                <ellipse cx="103" cy="142" rx="6" ry="2.8" fill="#4E6050" transform="rotate(32,103,142)"/>
-                <ellipse cx="66" cy="157" rx="5.5" ry="2.8" fill="#4E6050" transform="rotate(-22,66,157)"/>
-                <ellipse cx="94" cy="157" rx="5.5" ry="2.8" fill="#4E6050" transform="rotate(22,94,157)"/>
-                <ellipse cx="36" cy="90" rx="14" ry="9" fill="#E88888" opacity=".34"/>
-                <ellipse cx="124" cy="90" rx="14" ry="9" fill="#E88888" opacity=".34"/>
-                <g id="t-arms-n">
-                  <ellipse cx="21" cy="123" rx="15" ry="9" fill="#6E7E78" transform="rotate(-30,21,123)"/>
-                  <ellipse cx="139" cy="123" rx="15" ry="9" fill="#6E7E78" transform="rotate(30,139,123)"/>
-                </g>
-                <g id="t-arms-r" style="display:none">
-                  <ellipse cx="16" cy="98" rx="15" ry="9" fill="#6E7E78" transform="rotate(-68,16,98)"/>
-                  <ellipse cx="144" cy="98" rx="15" ry="9" fill="#6E7E78" transform="rotate(68,144,98)"/>
-                </g>
-                <ellipse cx="62" cy="176" rx="22" ry="11" fill="#6E7E78"/>
-                <ellipse cx="98" cy="176" rx="22" ry="11" fill="#6E7E78"/>
-                <ellipse cx="80" cy="91" rx="5" ry="4" fill="#2E302A"/>
-                <line x1="26" y1="88" x2="54" y2="92" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-                <line x1="26" y1="95" x2="55" y2="94" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-                <line x1="134" y1="88" x2="106" y2="92" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-                <line x1="134" y1="95" x2="105" y2="94" stroke="#3A3A30" stroke-width="1.2" opacity=".7"/>
-                <g id="t-eo">
-                  <circle cx="62" cy="74" r="14" fill="#F0F4EE"/>
-                  <circle cx="98" cy="74" r="14" fill="#F0F4EE"/>
-                  <circle cx="65" cy="76" r="9.5" fill="#1C1C14"/>
-                  <circle cx="101" cy="76" r="9.5" fill="#1C1C14"/>
-                  <circle cx="68" cy="72" r="4.5" fill="white"/>
-                  <circle cx="104" cy="72" r="4.5" fill="white"/>
-                </g>
-                <g id="t-ec" style="display:none">
-                  <path d="M50,74 Q62,86 74,74" stroke="#1C1C14" stroke-width="3" fill="none" stroke-linecap="round"/>
-                  <path d="M86,74 Q98,86 110,74" stroke="#1C1C14" stroke-width="3" fill="none" stroke-linecap="round"/>
-                </g>
-                <g id="t-mc"><path d="M73,97 Q80,102 87,97" stroke="#2E302A" stroke-width="2" fill="none" stroke-linecap="round"/></g>
-                <g id="t-mg" style="display:none"><path d="M66,95 Q80,107 94,95" stroke="#2E302A" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
-                <g id="t-mr" style="display:none">
-                  <ellipse cx="80" cy="97" rx="14" ry="12" fill="#1A1A10"/>
-                  <path d="M66,88 Q80,82 94,88" stroke="#2E302A" stroke-width="2" fill="none" stroke-linecap="round"/>
-                </g>
-                <g id="t-bl" style="display:none">
-                  <ellipse cx="36" cy="90" rx="17" ry="11" fill="#E88888" opacity=".46"/>
-                  <ellipse cx="124" cy="90" rx="17" ry="11" fill="#E88888" opacity=".46"/>
-                </g>
-              </g>
-
-              <!-- ══ CHIBI DUCK ══ -->
-              <g id="c-chibi" style="display:none">
-                <ellipse cx="80" cy="133" rx="54" ry="57" fill="#E8C466"/>
-                <ellipse cx="80" cy="149" rx="36" ry="32" fill="#F4E8C0"/>
-                <g id="b-wn">
-                  <ellipse cx="22" cy="138" rx="16" ry="10" fill="#D4A840" transform="rotate(-28,22,138)"/>
-                  <ellipse cx="138" cy="138" rx="16" ry="10" fill="#D4A840" transform="rotate(28,138,138)"/>
-                </g>
-                <g id="b-wr" style="display:none">
-                  <ellipse cx="16" cy="116" rx="16" ry="10" fill="#D4A840" transform="rotate(-62,16,116)"/>
-                  <ellipse cx="144" cy="116" rx="16" ry="10" fill="#D4A840" transform="rotate(62,144,116)"/>
-                </g>
-                <ellipse cx="76" cy="74" rx="46" ry="12" fill="#3E6E6A" transform="rotate(-7,76,74)" opacity=".92"/>
-                <ellipse cx="72" cy="61" rx="40" ry="17" fill="#6A9090" transform="rotate(-9,72,61)"/>
-                <ellipse cx="69" cy="52" rx="30" ry="13" fill="#8AACAA" transform="rotate(-10,69,52)"/>
-                <circle cx="60" cy="43" r="7" fill="#F4F0E8"/>
-                <ellipse cx="36" cy="110" rx="16" ry="10" fill="#F09090" opacity=".44"/>
-                <ellipse cx="124" cy="110" rx="16" ry="10" fill="#F09090" opacity=".44"/>
-                <g id="b-eo">
-                  <circle cx="62" cy="103" r="13" fill="#F4F4F0"/>
-                  <circle cx="98" cy="103" r="13" fill="#F4F4F0"/>
-                  <circle cx="65" cy="105" r="8" fill="#1C1C14"/>
-                  <circle cx="101" cy="105" r="8" fill="#1C1C14"/>
-                  <circle cx="67" cy="102" r="4" fill="white"/>
-                  <circle cx="103" cy="102" r="4" fill="white"/>
-                </g>
-                <g id="b-ec" style="display:none">
-                  <path d="M51,103 Q62,114 73,103" stroke="#1C1C14" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-                  <path d="M87,103 Q98,114 109,103" stroke="#1C1C14" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-                </g>
-                <g id="b-bc"><path d="M71,117 Q80,125 89,117 Q84,123 76,123 Z" fill="#E07848"/></g>
-                <g id="b-bg" style="display:none">
-                  <path d="M66,114 Q80,128 94,114 L94,124 Q80,134 66,124 Z" fill="#E07848"/>
-                  <ellipse cx="80" cy="123" rx="9" ry="6" fill="#AA3820" opacity=".6"/>
-                </g>
-                <g id="b-bo" style="display:none">
-                  <ellipse cx="80" cy="120" rx="12" ry="10" fill="#E07848"/>
-                  <ellipse cx="80" cy="124" rx="8" ry="6" fill="#AA3820"/>
-                </g>
-                <g id="b-bl" style="display:none">
-                  <ellipse cx="36" cy="110" rx="19" ry="12" fill="#F09090" opacity=".56"/>
-                  <ellipse cx="124" cy="110" rx="19" ry="12" fill="#F09090" opacity=".56"/>
-                </g>
-                <ellipse cx="64" cy="179" rx="18" ry="9" fill="#E07848"/>
-                <ellipse cx="96" cy="179" rx="18" ry="9" fill="#E07848"/>
-              </g>
-
-              <!-- ══ JIJI ══ -->
-              <g id="c-jiji" style="display:none">
-                <path d="M104,168 C132,152 150,128 138,106 C132,92 116,88 112,100 C108,112 122,118 118,132 C114,144 100,150 100,164" stroke="#3C3A4A" stroke-width="12" fill="none" stroke-linecap="round"/>
-                <ellipse cx="80" cy="158" rx="35" ry="32" fill="#3C3A4A"/>
-                <ellipse cx="80" cy="148" rx="18" ry="15" fill="#5A5868"/>
-                <polygon points="40,64 26,14 62,50" fill="#3C3A4A"/>
-                <polygon points="120,64 134,14 98,50" fill="#3C3A4A"/>
-                <circle cx="80" cy="88" r="52" fill="#3C3A4A"/>
-                <polygon points="40,60 31,22 60,47" fill="#B888C4" opacity=".9"/>
-                <polygon points="120,60 129,22 100,47" fill="#B888C4" opacity=".9"/>
-                <ellipse cx="80" cy="103" rx="5" ry="4" fill="#C860A0"/>
-                <line x1="22" y1="100" x2="56" y2="103" stroke="#A0A0B0" stroke-width="1.2"/>
-                <line x1="22" y1="108" x2="57" y2="108" stroke="#A0A0B0" stroke-width="1.2"/>
-                <line x1="138" y1="100" x2="104" y2="103" stroke="#A0A0B0" stroke-width="1.2"/>
-                <line x1="138" y1="108" x2="103" y2="108" stroke="#A0A0B0" stroke-width="1.2"/>
-                <ellipse cx="62" cy="182" rx="20" ry="10" fill="#3C3A4A"/>
-                <ellipse cx="98" cy="182" rx="20" ry="10" fill="#3C3A4A"/>
-                <g id="j-eo">
-                  <circle cx="62" cy="84" r="18" fill="#F0EEF4"/>
-                  <circle cx="98" cy="84" r="18" fill="#F0EEF4"/>
-                  <circle cx="65" cy="87" r="12" fill="#1A1828"/>
-                  <circle cx="101" cy="87" r="12" fill="#1A1828"/>
-                  <circle cx="69" cy="82" r="5.5" fill="white"/>
-                  <circle cx="105" cy="82" r="5.5" fill="white"/>
-                </g>
-                <g id="j-ec" style="display:none">
-                  <path d="M46,84 Q62,97 78,84" stroke="#F0EEF4" stroke-width="3" fill="none" stroke-linecap="round"/>
-                  <path d="M82,84 Q98,97 114,84" stroke="#F0EEF4" stroke-width="3" fill="none" stroke-linecap="round"/>
-                </g>
-                <g id="j-mc"><path d="M74,108 Q80,112 86,108" stroke="#C860A0" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>
-                <g id="j-mg" style="display:none"><path d="M68,107 Q80,117 92,107" stroke="#C860A0" stroke-width="2.2" fill="none" stroke-linecap="round"/></g>
-                <g id="j-mo" style="display:none">
-                  <ellipse cx="80" cy="110" rx="10" ry="8" fill="#1A1828"/>
-                  <path d="M70,103 Q80,99 90,103" stroke="#C860A0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                </g>
-                <g id="j-bl" style="display:none">
-                  <ellipse cx="38" cy="94" rx="14" ry="9" fill="#E898B0" opacity=".35"/>
-                  <ellipse cx="122" cy="94" rx="14" ry="9" fill="#E898B0" opacity=".35"/>
-                </g>
-              </g>
-
-            </svg>
+            <div id="char-sprite"></div>
           </div>
         </div>
       </div>
@@ -500,18 +308,72 @@ body{font-family:'Nunito',sans-serif;background:var(--gnd);display:flex;justify-
 (function(){
 'use strict';
 
+/*
+  Sprite sheet layout (all pixel values are for the scaled display size):
+
+  totoro2.png  990×392 — 3 frames side-by-side (each 330×392)
+    display h=165 → scale=0.421 → frame w=139, total w=417
+    frame 0 (calm):   pos  0px  0
+    frame 1 (happy):  pos -139px 0
+    frame 2 (excited):pos -278px 0
+
+  duck1.png  1044×374 — 3 frames side-by-side (each 348×374)
+    display h=160 → scale=0.428 → frame w=149, total w=447
+    frame 0 (calm):  pos  0px  0
+    frame 1 (happy): pos -149px 0
+    frame 2 (sad):   pos -298px 0
+
+  duck2.png  418×634 — 2 frames stacked (each 418×317)
+    display h=138 → scale=0.435 → w=182, total h=276
+    frame 0 (drowsy):     pos 0  0px
+    frame 1 (deep sleep): pos 0 -138px
+
+  duck3.png  1002×450 — 2 frames side-by-side (each 501×450)
+    display h=160 → scale=0.356 → frame w=178, total w=356
+    frame 0 (happy wave): pos  0px 0
+    frame 1 (excited):    pos -178px 0
+
+  jiji1.png  628×612 — 2×2 grid (each cell 314×306)
+    display h=140 → scale=0.458 → frame w=144, total 287×280
+    top-left  (normal):  pos  0px    0px
+    top-right (happy):   pos -143px  0px
+    bot-left  (curious): pos  0px  -140px
+    bot-right (sleepy):  pos -143px -140px
+*/
+
 var CHARS = {
-  totoro:{title:"Totoro's To-Do",ri:'🌰',rl:'Snack',pi:'✋',pl:'Pat',yi:'🌪️',yl:'Roar',tl:'Acorns:',speed:.65,
-    f:{eo:'t-eo',ec:'t-ec',mc:'t-mc',mg:'t-mg',mo:'t-mr',an:'t-arms-n',ar:'t-arms-r',bl:'t-bl'}},
-  chibi:{title:"Chibi's To-Do",ri:'🌸',rl:'Treat',pi:'🎀',pl:'Hug',yi:'🎈',yl:'Hop',tl:'Treats:',speed:.85,
-    f:{eo:'b-eo',ec:'b-ec',mc:'b-bc',mg:'b-bg',mo:'b-bo',an:'b-wn',ar:'b-wr',bl:'b-bl'}},
-  jiji:{title:"Jiji's To-Do",ri:'🐟',rl:'Fish',pi:'🎀',pl:'Pet',yi:'✨',yl:'Magic',tl:'Fish:',speed:.72,
-    f:{eo:'j-eo',ec:'j-ec',mc:'j-mc',mg:'j-mg',mo:'j-mo',an:null,ar:null,bl:'j-bl'}}
+  totoro:{
+    title:"Totoro's To-Do",ri:'🌰',rl:'Snack',pi:'✋',pl:'Pat',yi:'🌪️',yl:'Roar',tl:'Acorns:',speed:.65,
+    sp:{
+      walk:   {img:'totoro2.png',sz:'417px 165px',pos:'0 0',         w:139,h:165},
+      happy:  {img:'totoro2.png',sz:'417px 165px',pos:'-139px 0',    w:139,h:165},
+      excited:{img:'totoro2.png',sz:'417px 165px',pos:'-278px 0',    w:139,h:165},
+      sleep:  {img:'totoro2.png',sz:'417px 165px',pos:'0 0',         w:139,h:165}
+    }
+  },
+  chibi:{
+    title:"Chibi's To-Do",ri:'🌸',rl:'Treat',pi:'🎀',pl:'Hug',yi:'🎈',yl:'Hop',tl:'Treats:',speed:.85,
+    sp:{
+      walk:   {img:'duck1.png', sz:'447px 160px',pos:'0 0',          w:149,h:160},
+      happy:  {img:'duck1.png', sz:'447px 160px',pos:'-149px 0',     w:149,h:160},
+      excited:{img:'duck3.png', sz:'356px 160px',pos:'-178px 0',     w:178,h:160},
+      sleep:  {img:'duck2.png', sz:'182px 276px',pos:'0 -138px',     w:182,h:138}
+    }
+  },
+  jiji:{
+    title:"Jiji's To-Do",ri:'🐟',rl:'Fish',pi:'🎀',pl:'Pet',yi:'✨',yl:'Magic',tl:'Fish:',speed:.72,
+    sp:{
+      walk:   {img:'jiji1.png', sz:'287px 280px',pos:'0 0',          w:144,h:140},
+      happy:  {img:'jiji1.png', sz:'287px 280px',pos:'-143px 0',     w:144,h:140},
+      excited:{img:'jiji1.png', sz:'287px 280px',pos:'-143px 0',     w:144,h:140},
+      sleep:  {img:'jiji1.png', sz:'287px 280px',pos:'-143px -140px',w:144,h:140}
+    }
+  }
 };
 
 var sel=null,tasks=[],rewards=0;
 var walkPct=0,feedPct=0;
-var cstate='walking',charX=18,dir=1,speed=.65;
+var cstate='walking',charX=18,dir=1,speed=.65,charW=139;
 var rafId=null,idleT=null,deepT=null;
 
 function init(){
@@ -548,19 +410,30 @@ function startApp(k){
   document.getElementById('tally-icon').textContent=c.ri;
   document.getElementById('tally-lbl').textContent=c.tl;
   speed=c.speed;
-  ['totoro','chibi','jiji'].forEach(function(n){
-    document.getElementById('c-'+n).style.display=(n===k?'':'none');
-  });
   tasks=JSON.parse(localStorage.getItem('g-tasks-'+k)||'[]');
   rewards=parseInt(localStorage.getItem('g-rew-'+k)||'0');
   renderTasks();recalcMeters();updateUI();
   charX=18;dir=1;
   document.getElementById('char-flip').classList.remove('facing-left');
-  setFace('default');startWalk();
+  setSprite('walk');startWalk();
 }
 
-/* walk */
-function maxX(){var s=document.getElementById('char-stage');return s?s.offsetWidth-124:230;}
+/* ── sprites ─────────────────────────────────── */
+function setSprite(preset){
+  if(!sel)return;
+  var sp=CHARS[sel].sp[preset]||CHARS[sel].sp.walk;
+  var el=document.getElementById('char-sprite');
+  el.style.backgroundImage="url('"+sp.img+"')";
+  el.style.backgroundSize=sp.sz;
+  el.style.backgroundPosition=sp.pos;
+  el.style.width=sp.w+'px';
+  el.style.height=sp.h+'px';
+  document.getElementById('char-pos').style.width=sp.w+'px';
+  charW=sp.w;
+}
+
+/* ── walk engine ─────────────────────────────── */
+function maxX(){var s=document.getElementById('char-stage');return s?s.offsetWidth-charW-8:220;}
 function applyDir(){var f=document.getElementById('char-flip');dir<0?f.classList.add('facing-left'):f.classList.remove('facing-left');}
 function applyState(){document.getElementById('char-pos').className=cstate;}
 function step(){
@@ -571,69 +444,56 @@ function step(){
   document.getElementById('char-pos').style.left=charX+'px';
   rafId=requestAnimationFrame(step);
 }
-function startWalk(){stopWalk();cstate='walking';applyState();rafId=requestAnimationFrame(step);resetIdle();}
+function startWalk(){stopWalk();cstate='walking';setSprite('walk');applyState();rafId=requestAnimationFrame(step);resetIdle();}
 function stopWalk(){if(rafId){cancelAnimationFrame(rafId);rafId=null;}}
 function resetIdle(){clearIdle();idleT=setTimeout(goSit,40000);deepT=setTimeout(goDeepSleep,65000);}
 function clearIdle(){
   clearTimeout(idleT);clearTimeout(deepT);idleT=deepT=null;
   var z=document.querySelector('.zzz-el');if(z)z.remove();
 }
-function goSit(){stopWalk();cstate='sitting';setFace('default');applyState();deepT=setTimeout(goSleep,25000);}
+function goSit(){stopWalk();cstate='sitting';setSprite('walk');applyState();deepT=setTimeout(goSleep,25000);}
 function goSleep(){
   document.getElementById('char-flip').classList.remove('facing-left');
-  cstate='sleeping';setFace('sleep');applyState();spawnZzz();
+  cstate='sleeping';setSprite('sleep');applyState();spawnZzz();
   setTimeout(function(){cstate='sleep-deep';applyState();},1800);
 }
 function goDeepSleep(){
   document.getElementById('char-flip').classList.remove('facing-left');
-  cstate='sleep-deep';setFace('sleep');applyState();spawnZzz();
+  cstate='sleep-deep';setSprite('sleep');applyState();spawnZzz();
 }
 function spawnZzz(){
   var s=document.getElementById('char-stage');if(!s)return;
   var z=document.createElement('div');z.className='zzz-el';
-  z.textContent='z z z';z.style.left=(charX+72)+'px';z.style.bottom='92px';
+  z.textContent='z z z';z.style.left=(charX+charW*0.6)+'px';z.style.bottom='100px';
   s.appendChild(z);
 }
 function wake(){if(cstate!=='walking')startWalk();}
 
-/* face */
-function sh(id){if(id){var e=document.getElementById(id);if(e)e.style.display='';}}
-function hd(id){if(id){var e=document.getElementById(id);if(e)e.style.display='none';}}
-function setFace(p){
-  if(!sel)return;
-  var f=CHARS[sel].f;
-  sh(f.eo);hd(f.ec);sh(f.mc);hd(f.mg);hd(f.mo);sh(f.an);hd(f.ar);hd(f.bl);
-  if(p==='grin'){hd(f.mc);sh(f.mg);}
-  else if(p==='happy'){hd(f.mc);sh(f.mo);hd(f.an);sh(f.ar);}
-  else if(p==='sleep'){hd(f.eo);sh(f.ec);}
-  else if(p==='pet'){hd(f.eo);sh(f.ec);sh(f.bl);}
-}
-
-/* rewards */
+/* ── rewards ─────────────────────────────────── */
 window.doSnack=function(){
   if(rewards<=0)return;
   rewards--;save();
-  wake();cstate='eating';setFace('grin');applyState();
+  wake();cstate='eating';setSprite('happy');applyState();
   spawnFloat(CHARS[sel].ri);clearIdle();
-  setTimeout(function(){setFace('default');startWalk();},2000);
+  setTimeout(function(){setSprite('walk');startWalk();},2000);
 };
 window.doPet=function(){
-  wake();cstate='petting';setFace('pet');applyState();
+  wake();cstate='petting';setSprite('happy');applyState();
   spawnFloat('💕');clearIdle();
-  setTimeout(function(){setFace('default');startWalk();},2800);
+  setTimeout(function(){setSprite('walk');startWalk();},2800);
 };
 window.doPlay=function(){
-  wake();cstate='playing';setFace('happy');applyState();
+  wake();cstate='playing';setSprite('excited');applyState();
   spawnFloat(CHARS[sel].yi);clearIdle();
-  setTimeout(function(){setFace('default');startWalk();},2200);
+  setTimeout(function(){setSprite('walk');startWalk();},2200);
 };
 
 function spawnFloat(e){
   var s=document.getElementById('char-stage');if(!s)return;
   var el=document.createElement('div');el.className='float-el';
   el.textContent=e;
-  el.style.left=(charX+28+Math.random()*32)+'px';
-  el.style.bottom=(88+Math.random()*18)+'px';
+  el.style.left=(charX+20+Math.random()*40)+'px';
+  el.style.bottom=(charW*0.7+Math.random()*20)+'px';
   s.appendChild(el);
   setTimeout(function(){el.remove();},1500);
 }
@@ -645,7 +505,7 @@ function updateUI(){
   var tv=document.getElementById('tally-total');if(tv)tv.textContent=tot;
 }
 
-/* tasks */
+/* ── tasks ───────────────────────────────────── */
 window.addTask=function(){
   var inp=document.getElementById('task-inp'),ts=document.getElementById('tag-sel');
   var txt=inp.value.trim();if(!txt)return;
@@ -678,7 +538,7 @@ window.deleteTask=function(id){
 
 function bounce(){
   var el=document.getElementById('char-inner');if(!el)return;
-  el.style.transition='transform .12s';el.style.transform='translateY(-16px)';
+  el.style.transition='transform .12s';el.style.transform='translateY(-18px)';
   setTimeout(function(){el.style.transform='';},120);
   setTimeout(function(){el.style.transition='';},260);
 }
@@ -709,8 +569,7 @@ function renderTasks(){
     var tag=t.tag!=='none'?'<span class="task-tag">'+(t.tag==='walk'?'🐾 Walk':'🍃 Feed')+'</span>':'';
     return '<div class="task-item'+(t.done?' done':'')+'">'+
       '<input type="checkbox" class="task-cb"'+(t.done?' checked':'')+' onchange="toggleTask('+t.id+')">'+
-      '<span class="task-txt">'+esc(t.text)+'</span>'+
-      tag+
+      '<span class="task-txt">'+esc(t.text)+'</span>'+tag+
       '<button class="task-del" onclick="deleteTask('+t.id+')">×</button></div>';
   }).join('');
 }
