@@ -3,18 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ghibli Desktop Pet</title>
+<title>Ghibli Companion</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#527848">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Companion">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Nunito:wght@400;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;}
-body{font-family:'Nunito',sans-serif;background:#87C1D8;}
+body{font-family:'Nunito',sans-serif;background:#E8F2DE;}
 
 /* ─── CSS vars per character ─────────────────────────────────────── */
-body[data-char="totoro"]{--acc:#527848;--acc2:#8AB070;--txt:#2A3428;--sub:#6A7860;--card:rgba(250,253,245,.97);--brd:#C8DEB8;--srf:#F4F9EC;}
-body[data-char="chibi"] {--acc:#B88820;--acc2:#D4AA40;--txt:#3A2818;--sub:#7A5828;--card:rgba(255,250,240,.97);--brd:#E8D8A0;--srf:#FDF6EC;}
-body[data-char="jiji"]  {--acc:#7060A0;--acc2:#A090C8;--txt:#1A1828;--sub:#6050A0;--card:rgba(248,246,255,.97);--brd:#C8C0E4;--srf:#F4F2FC;}
+body[data-char="totoro"]{--acc:#527848;--acc2:#8AB070;--txt:#2A3428;--sub:#6A7860;--card:rgba(250,253,245,.97);--brd:#C8DEB8;--srf:#F4F9EC;background:#E8F2DE;}
+body[data-char="chibi"] {--acc:#B88820;--acc2:#D4AA40;--txt:#3A2818;--sub:#7A5828;--card:rgba(255,250,240,.97);--brd:#E8D8A0;--srf:#FDF6EC;background:#FBF4E2;}
+body[data-char="jiji"]  {--acc:#7060A0;--acc2:#A090C8;--txt:#1A1828;--sub:#6050A0;--card:rgba(248,246,255,.97);--brd:#C8C0E4;--srf:#F4F2FC;background:#13102A;}
 
 /* ─── SELECTION SCREEN ───────────────────────────────────────────── */
 #sel-screen{position:fixed;inset:0;z-index:200;background:linear-gradient(168deg,#B8D8F0 0%,#D4EAB8 55%,#C8E4A0 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;overflow:hidden;}
@@ -34,32 +38,8 @@ body[data-char="jiji"]  {--acc:#7060A0;--acc2:#A090C8;--txt:#1A1828;--sub:#6050A
 .sparkle{position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,#FFE860,#FFCC00);animation:sp-drift var(--d,4s) var(--dl,0s) ease-in-out infinite;opacity:0;}
 @keyframes sp-drift{0%{opacity:0;transform:translateY(0) scale(.4);}30%{opacity:.85;transform:translateY(-22px) scale(1);}70%{opacity:.5;transform:translateY(-52px) scale(.8);}100%{opacity:0;transform:translateY(-80px) scale(.2);}}
 
-/* ─── DESKTOP BACKGROUND ─────────────────────────────────────────── */
-#desktop-bg{position:fixed;inset:0;z-index:0;}
-body[data-char="totoro"] #desktop-bg{background:linear-gradient(180deg,#78B8D8 0%,#A8CDE4 28%,#C4E0C4 60%,#D8ECC8 82%);}
-body[data-char="chibi"]  #desktop-bg{background:linear-gradient(180deg,#E8C87A 0%,#EEDE9A 28%,#E8EAC0 60%,#D8ECC0 82%);}
-body[data-char="jiji"]   #desktop-bg{background:linear-gradient(180deg,#0E0C22 0%,#201C3E 28%,#3C3268 60%,#605090 82%);}
-
-/* Ground strip */
-#ground{position:fixed;bottom:0;left:0;right:0;height:54px;z-index:1;pointer-events:none;}
-body[data-char="totoro"] #ground{background:linear-gradient(180deg,#4A8038 0%,#3A6028 100%);}
-body[data-char="chibi"]  #ground{background:linear-gradient(180deg,#7AAA40 0%,#5A8030 100%);}
-body[data-char="jiji"]   #ground{background:linear-gradient(180deg,#1A1830 0%,#100E20 100%);}
-#ground::before{content:'';position:absolute;top:-5px;left:0;right:0;height:10px;background:inherit;filter:blur(3px);opacity:.6;}
-
-/* CSS clouds */
-.bg-cloud{position:absolute;width:120px;height:40px;background:rgba(255,255,255,.78);border-radius:60px;pointer-events:none;animation:cloud-drift var(--d,42s) var(--dl,0s) linear infinite;}
-.bg-cloud::before{content:'';position:absolute;width:55px;height:55px;background:inherit;border-radius:50%;top:-26px;left:18px;}
-.bg-cloud::after{content:'';position:absolute;width:36px;height:36px;background:inherit;border-radius:50%;top:-14px;left:66px;}
-@keyframes cloud-drift{from{transform:translateX(-220px);}to{transform:translateX(110vw);}}
-
-/* Stars (Jiji night) */
-.bg-star{position:absolute;background:white;border-radius:50%;pointer-events:none;animation:star-twinkle var(--d,3s) var(--dl,0s) ease-in-out infinite;}
-@keyframes star-twinkle{0%,100%{opacity:.9;transform:scale(1);}50%{opacity:.15;transform:scale(.6);}}
-#bg-moon{position:absolute;width:56px;height:56px;border-radius:50%;background:#FFF8E0;box-shadow:0 0 30px rgba(255,248,200,.9),0 0 70px rgba(255,248,200,.3);top:8%;right:12%;pointer-events:none;}
-
-/* ─── CHARACTER (position:fixed, walks full viewport) ─────────────── */
-#char-pos{position:fixed;bottom:54px;left:0;cursor:pointer;z-index:10;}
+/* ─── CHARACTER (roams inside stage) ────────────────────────────── */
+#char-pos{position:absolute;bottom:10px;left:0;cursor:pointer;z-index:10;}
 #char-inner{display:flex;flex-direction:column;align-items:center;transform-origin:bottom center;}
 #char-flip{transform-origin:center bottom;display:flex;flex-direction:column;align-items:center;}
 #char-flip.facing-left{transform:scaleX(-1);}
@@ -70,32 +50,8 @@ body[data-char="jiji"]   #ground{background:linear-gradient(180deg,#1A1830 0%,#1
 #char-img.blinking{animation:eye-blink .10s ease-in-out;transform-origin:50% 36%;}
 @keyframes eye-blink{0%,100%{transform:scaleY(1);}45%,55%{transform:scaleY(0.70);}}
 
-/* ── Animated CSS legs ─────────────────────────────────────────── */
-#char-legs{display:flex;align-items:flex-end;justify-content:center;position:relative;z-index:-1;margin-top:-8px;}
-.leg{transform-origin:top center;}
-
-/* Totoro: stubby grey rounded legs */
-body[data-char="totoro"] #char-legs{gap:22px;}
-body[data-char="totoro"] .leg{width:13px;height:22px;background:#7A8878;border-radius:7px;}
-
-/* Duck: slim orange legs with flat web foot */
-body[data-char="chibi"] #char-legs{gap:18px;}
-body[data-char="chibi"] .leg{width:6px;height:18px;background:#E07800;border-radius:3px 3px 0 0;position:relative;}
-body[data-char="chibi"] .leg::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:16px;height:5px;background:#E07800;border-radius:3px;}
-
-/* Jiji: slim black legs with paw bump */
-body[data-char="jiji"] #char-legs{gap:16px;}
-body[data-char="jiji"] .leg{width:6px;height:20px;background:#1A1A1A;border-radius:3px 3px 5px 5px;position:relative;}
-body[data-char="jiji"] .leg::after{content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:12px;height:6px;background:#1A1A1A;border-radius:50%;}
-
-/* Step animations — timing driven by --ws variable */
-.walking .leg-l{animation:leg-step-l var(--ws,.46s) ease-in-out infinite;}
-.walking .leg-r{animation:leg-step-r var(--ws,.46s) ease-in-out infinite;}
-@keyframes leg-step-l{0%,100%{transform:rotate(-22deg);}50%{transform:rotate(22deg);}}
-@keyframes leg-step-r{0%,100%{transform:rotate(22deg);}50%{transform:rotate(-22deg);}}
-
 /* Character ground shadow */
-#char-shadow{position:fixed;z-index:2;pointer-events:none;background:rgba(0,0,0,.18);border-radius:50%;height:10px;}
+#char-shadow{position:absolute;z-index:2;pointer-events:none;background:rgba(0,0,0,.12);border-radius:50%;height:8px;}
 
 /* ── Walk & action animations ──────────────────────────────────── */
 @keyframes waddle    {0%,100%{transform:rotate(-2.5deg) translateY(0);}25%{transform:rotate(0) translateY(-8px);}50%{transform:rotate(2.5deg) translateY(0);}75%{transform:rotate(0) translateY(-6px);}}
@@ -124,25 +80,20 @@ body[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-o
 .taskdone   #char-inner{animation:task-bounce   .5s  ease-out    2;}
 
 /* ─── SPEECH BUBBLE ─────────────────────────────────────────────── */
-#speech-bubble{position:fixed;z-index:20;background:white;border-radius:14px;padding:6px 13px;font-size:12px;font-family:'Nunito',sans-serif;font-weight:700;color:#2A3428;white-space:nowrap;pointer-events:none;box-shadow:0 3px 14px rgba(0,0,0,.18);opacity:0;transform:translateY(-5px) scale(.9);transition:opacity .25s,transform .25s;}
+#speech-bubble{position:absolute;z-index:20;background:white;border-radius:14px;padding:6px 13px;font-size:12px;font-family:'Nunito',sans-serif;font-weight:700;color:#2A3428;white-space:nowrap;pointer-events:none;box-shadow:0 3px 14px rgba(0,0,0,.18);opacity:0;transform:translateY(-5px) scale(.9);transition:opacity .25s,transform .25s;}
 #speech-bubble.visible{opacity:1;transform:translateY(0) scale(1);}
 #speech-bubble::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid white;}
 
 /* ─── FLOAT / ZZZ ───────────────────────────────────────────────── */
-.float-el{position:fixed;pointer-events:none;animation:float-up 1.4s ease-out forwards;font-size:24px;z-index:15;}
-@keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1);}70%{opacity:.9;transform:translateY(-60px) scale(1.2);}100%{opacity:0;transform:translateY(-90px) scale(.6);}}
-.zzz-el{position:fixed;pointer-events:none;font-family:'Space Mono',monospace;color:rgba(255,255,255,.92);text-shadow:0 1px 4px rgba(0,0,0,.3);font-size:13px;font-weight:700;animation:zzz-drift 2.4s ease-out infinite;z-index:15;}
+.float-el{position:absolute;pointer-events:none;animation:float-up 1.4s ease-out forwards;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:white;background:var(--acc,#527848);padding:4px 10px;border-radius:12px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.18);z-index:15;}
+@keyframes float-up{0%{opacity:1;transform:translateY(0) scale(.85);}30%{opacity:1;transform:translateY(-26px) scale(1);}70%{opacity:.9;transform:translateY(-60px) scale(1);}100%{opacity:0;transform:translateY(-90px) scale(.9);}}
+.zzz-el{position:absolute;pointer-events:none;font-family:'Space Mono',monospace;color:var(--acc,#527848);opacity:.7;font-size:13px;font-weight:700;animation:zzz-drift 2.4s ease-out infinite;z-index:15;}
 @keyframes zzz-drift{0%{opacity:0;transform:translate(0,0) scale(.5);}25%{opacity:.9;}100%{opacity:0;transform:translate(28px,-42px) scale(1);}}
 
-/* ─── PANEL OPEN BUTTON ─────────────────────────────────────────── */
-#panel-btn{position:fixed;top:16px;right:16px;z-index:100;width:50px;height:50px;border-radius:50%;background:var(--acc,#527848);color:white;border:none;cursor:pointer;font-size:22px;box-shadow:0 4px 20px rgba(0,0,0,.3);display:none;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;}
-#panel-btn:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(0,0,0,.4);}
-#panel-btn.show{display:flex;}
 
-/* ─── FLOATING TODO PANEL ───────────────────────────────────────── */
-#todo-panel{position:fixed;top:14px;right:14px;z-index:90;width:min(340px,calc(100vw - 28px));max-height:calc(100vh - 28px);overflow-y:auto;overflow-x:hidden;background:var(--card,rgba(250,253,245,.97));border:1.5px solid var(--brd,#C8DEB8);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.1);transform-origin:top right;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .22s;}
-#todo-panel.hidden{transform:scale(.5) translateX(40px) translateY(-40px);opacity:0;pointer-events:none;}
-.panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px;border-bottom:1px solid var(--brd,#C8DEB8);position:sticky;top:0;background:var(--card);z-index:2;border-radius:20px 20px 0 0;}
+/* ─── FULL-SCREEN APP PANEL ─────────────────────────────────────── */
+#todo-panel{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;overflow:hidden;background:var(--card,rgba(250,253,245,.97));border:none;border-radius:0;}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--brd,#C8DEB8);flex-shrink:0;background:var(--card);}
 .panel-title{font-family:'Comfortaa',cursive;font-size:17px;font-weight:700;color:var(--acc,#527848);}
 .panel-actions{display:flex;gap:8px;align-items:center;}
 .btn-switch{font-size:11px;font-family:'Nunito',sans-serif;background:transparent;color:var(--acc);border:1.5px solid var(--brd);border-radius:20px;padding:4px 10px;cursor:pointer;transition:background .15s;}
@@ -161,7 +112,10 @@ body[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-o
 .meter-fill{height:100%;background:var(--acc2);border-radius:6px;transition:width .4s ease;}
 .tally-bar{display:flex;align-items:center;gap:7px;padding:8px 12px;border-bottom:1px solid var(--brd);font-size:12px;color:var(--sub);}
 .tally-val{font-family:'Space Mono',monospace;font-weight:700;color:var(--acc);font-size:13px;}
-.tasks-wrap{padding:12px;}
+.tasks-wrap{flex:1;overflow-y:auto;padding:12px;}
+
+/* ─── CHARACTER STAGE (bottom of panel) ─────────────────────────── */
+#char-stage{height:180px;position:relative;flex-shrink:0;overflow:hidden;border-top:1px solid var(--brd,#C8DEB8);background:var(--srf,#F4F9EC);}
 .add-row{display:flex;gap:7px;margin-bottom:10px;}
 .add-input{flex:1;padding:8px 11px;background:var(--srf);border:1.5px solid var(--brd);border-radius:11px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--txt);outline:none;transition:border-color .15s;}
 .add-input:focus{border-color:var(--acc);}
@@ -183,7 +137,7 @@ body[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-o
 .empty-state{text-align:center;padding:18px 10px;color:var(--sub);font-size:13px;font-style:italic;}
 
 /* ─── HINT ───────────────────────────────────────────────────────── */
-#hint{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(255,255,255,.6);pointer-events:none;z-index:3;white-space:nowrap;font-family:'Nunito',sans-serif;text-shadow:0 1px 4px rgba(0,0,0,.3);transition:opacity 1.2s;}
+#hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--sub,#6A7860);pointer-events:none;z-index:3;white-space:nowrap;font-family:'Nunito',sans-serif;transition:opacity 1.2s;}
 </style>
 </head>
 <body>
@@ -198,7 +152,7 @@ body[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-o
   <div class="sparkle" style="left:38%;top:82%;--d:4.1s;--dl:-1.7s"></div>
   <div class="sparkle" style="left:90%;top:72%;--d:3.6s;--dl:-.9s"></div>
   <div class="sparkle" style="left:6%;top:54%;--d:4.3s;--dl:-1.4s"></div>
-  <div class="sel-title">Choose your<br><em>Ghibli companion</em> ✨</div>
+  <div class="sel-title">Choose your<br><em>Ghibli companion</em></div>
   <div class="sel-sub">They'll roam your screen while you get things done</div>
   <div class="sel-cards">
     <div class="sel-card" onclick="selectChar('totoro')">
@@ -219,59 +173,32 @@ body[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-o
   </div>
 </div>
 
-<!-- DESKTOP STAGE -->
-<div id="desktop-bg"></div>
-<div id="ground"></div>
-<div id="char-shadow"></div>
-
-<!-- CHARACTER -->
-<div id="char-pos" style="display:none" onclick="onCharClick()">
-  <div id="char-inner">
-    <div id="char-flip">
-      <div id="char-wrap">
-        <img id="char-img" src="" alt="" style="display:block;mix-blend-mode:multiply;">
-      </div>
-      <div id="char-legs">
-        <div class="leg leg-l"></div>
-        <div class="leg leg-r"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="speech-bubble"><span id="bubble-txt"></span></div>
-
-<!-- PANEL TOGGLE (visible when panel is closed) -->
-<button id="panel-btn" onclick="openPanel()" title="Open to-do list">📋</button>
-
-<!-- FLOATING TODO PANEL -->
+<!-- APP (full screen) -->
 <div id="todo-panel">
   <div class="panel-hdr">
     <span class="panel-title" id="app-title">Totoro's To-Do</span>
     <div class="panel-actions">
-      <button class="btn-switch" onclick="showSelection()">✨ Switch</button>
-      <button class="btn-close" onclick="closePanel()" title="Minimise">−</button>
+      <button class="btn-switch" onclick="showSelection()">Switch</button>
     </div>
   </div>
   <div class="reward-strip">
     <button class="reward-btn" id="btn-snack" onclick="doSnack()">
-      <span id="ri0">🌰</span><span id="rl0">Snack</span><span class="rc" id="snack-ct">×0</span>
+      <span id="rl0">Snack</span><span class="rc" id="snack-ct">×0</span>
     </button>
-    <button class="reward-btn" onclick="doPet()"><span id="ri1">✋</span><span id="rl1">Pat</span></button>
-    <button class="reward-btn" onclick="doPlay()"><span id="ri2">🌪️</span><span id="rl2">Roar</span></button>
+    <button class="reward-btn" onclick="doPet()"><span id="rl1">Pat</span></button>
+    <button class="reward-btn" onclick="doPlay()"><span id="rl2">Roar</span></button>
   </div>
   <div class="meters">
     <div class="meter">
-      <div class="meter-lbl"><span>🐾 Walk</span><span id="walk-pct">0%</span></div>
+      <div class="meter-lbl"><span>Walk</span><span id="walk-pct">0%</span></div>
       <div class="meter-bar"><div class="meter-fill" id="walk-fill" style="width:0%"></div></div>
     </div>
     <div class="meter">
-      <div class="meter-lbl"><span>🍃 Feed</span><span id="feed-pct">0%</span></div>
+      <div class="meter-lbl"><span>Feed</span><span id="feed-pct">0%</span></div>
       <div class="meter-bar"><div class="meter-fill" id="feed-fill" style="width:0%"></div></div>
     </div>
   </div>
   <div class="tally-bar">
-    <span id="tally-icon">🌰</span>
     <span id="tally-lbl">Rewards earned:</span>
     <span class="tally-val" id="tally-total">0</span>
   </div>
@@ -281,31 +208,44 @@ body[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-o
         onkeydown="if(event.key==='Enter')addTask()"/>
       <select id="tag-sel" class="tag-sel">
         <option value="none">—</option>
-        <option value="walk">🐾</option>
-        <option value="feed">🍃</option>
+        <option value="walk">Walk</option>
+        <option value="feed">Feed</option>
       </select>
       <button class="btn-add" onclick="addTask()">+</button>
     </div>
     <div id="task-list" class="task-list"></div>
   </div>
+  <!-- CHARACTER STAGE -->
+  <div id="char-stage">
+    <div id="char-shadow"></div>
+    <div id="char-pos" style="display:none" onclick="onCharClick()">
+      <div id="char-inner">
+        <div id="char-flip">
+          <div id="char-wrap">
+            <img id="char-img" src="" alt="" style="display:block;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="speech-bubble"><span id="bubble-txt"></span></div>
+    <div id="hint">click your companion</div>
+  </div>
 </div>
-
-<div id="hint">click your companion ✦</div>
 
 <script>
 (function(){
 'use strict';
 
 var CHARS = {
-  totoro:{title:"Totoro's To-Do",ri:'🌰',rl:'Snack',pi:'✋',pl:'Pat',yi:'🌪️',yl:'Roar',tl:'Acorns:',speed:.55,ws:'.46s',
+  totoro:{title:"Totoro's To-Do",rl:'Snack',pl:'Pat',yl:'Roar',tl:'Acorns:',speed:.55,ws:'.46s',
     img:{neutral:'totoroneutral.png',waiting:'totorostare.png',greeting:'totorohai.png',taskdone:'totoroexcited.png',celebrate:'totorojump.png',idle:'totoroneutral.png',sleeping:'totoroneutral.png'},
-    bubbles:["Any updates? 👀","Pssst… tasks? 🌿","Still waiting 🍃","I'm watching 👀","How's the list? 🌱"]},
-  chibi:{title:"Chibi's To-Do",ri:'🌸',rl:'Treat',pi:'🎀',pl:'Hug',yi:'🎈',yl:'Hop',tl:'Treats:',speed:.70,ws:'.52s',
+    bubbles:["Any updates?","Pssst… tasks?","Still waiting…","I'm watching.","How's the list?"]},
+  chibi:{title:"Chibi's To-Do",rl:'Treat',pl:'Hug',yl:'Hop',tl:'Treats:',speed:.70,ws:'.52s',
     img:{neutral:'duckneurtral.png',waiting:'duckcry.png',greeting:'duckhi.png',taskdone:'duckhappy.png',celebrate:'duckhappy.png',idle:'duckgoingtosleep.png',sleeping:'ducksleep.png'},
-    bubbles:["please… 🥺","any progress? 💧","still nothing 🐣","hello?? 🌸","don't forget me 💕"]},
-  jiji:{title:"Jiji's To-Do",ri:'🐟',rl:'Fish',pi:'🎀',pl:'Pet',yi:'✨',yl:'Magic',tl:'Fish:',speed:.62,ws:'.40s',
+    bubbles:["please…","any progress?","still nothing…","hello??","don't forget me"]},
+  jiji:{title:"Jiji's To-Do",rl:'Fish',pl:'Pet',yl:'Magic',tl:'Fish:',speed:.62,ws:'.40s',
     img:{neutral:'jijineutral.png',waiting:'jijiannoyed.png',greeting:'jijiwaiting.png',taskdone:'jijihappy.png',celebrate:'jijihappy.png',idle:'jijisleepy.png',sleeping:'jijisleepy.png'},
-    bubbles:["...well?","still nothing. 😒","I'm waiting.","*stares* ✨","tasks exist. do them."]}
+    bubbles:["...well?","still nothing.","I'm waiting.","*stares*","tasks exist. do them."]}
 };
 
 var DIMS = {
@@ -318,7 +258,7 @@ var DIMS = {
 };
 
 var SLEEP_CLASS = {totoro:'sleeping',chibi:'sleep-flat',jiji:'sleep-flat'};
-var GROUND_H = 54;
+var GROUND_H = 10;
 
 var sel=null,tasks=[],rewards=0,walkPct=0,feedPct=0;
 var cstate='walking',appMode='neutral';
@@ -328,33 +268,7 @@ var inAction=false;
 
 function preload(){Object.keys(DIMS).forEach(function(f){var i=new Image();i.src=f;});}
 
-/* ── background ─────────────────────────────────────────────── */
-function genBg(char){
-  var bg=document.getElementById('desktop-bg');
-  bg.innerHTML='';
-  if(char==='jiji'){
-    for(var i=0;i<28;i++){
-      var s=document.createElement('div');s.className='bg-star';
-      s.style.left=(Math.random()*96)+'%';s.style.top=(Math.random()*68)+'%';
-      var sz=1+Math.random()*2.5;s.style.width=sz+'px';s.style.height=sz+'px';
-      s.style.setProperty('--d',(2+Math.random()*3)+'s');
-      s.style.setProperty('--dl',(-Math.random()*3)+'s');
-      bg.appendChild(s);
-    }
-    var moon=document.createElement('div');moon.id='bg-moon';bg.appendChild(moon);
-  } else {
-    for(var i=0;i<5;i++){
-      var c=document.createElement('div');c.className='bg-cloud';
-      c.style.top=(5+Math.random()*34)+'%';
-      var dur=32+Math.random()*26;
-      c.style.setProperty('--d',dur+'s');
-      c.style.setProperty('--dl',(-dur*Math.random())+'s');
-      c.style.transform='scale('+(0.55+Math.random()*.9)+')';
-      c.style.transformOrigin='left center';
-      bg.appendChild(c);
-    }
-  }
-}
+function genBg(){}
 
 /* ── init / selection ───────────────────────────────────────── */
 function init(){
@@ -383,17 +297,16 @@ function startApp(k){
   var c=CHARS[k];
   document.body.setAttribute('data-char',k);
   document.getElementById('app-title').textContent=c.title;
-  document.getElementById('ri0').textContent=c.ri;document.getElementById('rl0').textContent=c.rl;
-  document.getElementById('ri1').textContent=c.pi;document.getElementById('rl1').textContent=c.pl;
-  document.getElementById('ri2').textContent=c.yi;document.getElementById('rl2').textContent=c.yl;
-  document.getElementById('tally-icon').textContent=c.ri;
+  document.getElementById('rl0').textContent=c.rl;
+  document.getElementById('rl1').textContent=c.pl;
+  document.getElementById('rl2').textContent=c.yl;
   document.getElementById('tally-lbl').textContent=c.tl;
   document.body.style.setProperty('--ws',c.ws);
 
   tasks=JSON.parse(localStorage.getItem('g-tasks-'+k)||'[]');
   rewards=parseInt(localStorage.getItem('g-rew-'+k)||'0');
   walkPct=0;feedPct=0;
-  charX=Math.floor(window.innerWidth*0.28);
+  charX=100;
   dir=1;document.getElementById('char-flip').classList.remove('facing-left');
 
   genBg(k);
@@ -441,7 +354,8 @@ function setImg(mode){
 }
 
 /* ── walk engine ────────────────────────────────────────────── */
-function maxX(){return Math.max(10,window.innerWidth-charW-10);}
+function stageW(){var s=document.getElementById('char-stage');return s?s.offsetWidth:window.innerWidth;}
+function maxX(){return Math.max(10,stageW()-charW-10);}
 function applyDir(){var f=document.getElementById('char-flip');dir<0?f.classList.add('facing-left'):f.classList.remove('facing-left');}
 function applyState(){document.getElementById('char-pos').className=cstate;}
 function updateShadow(){
@@ -490,7 +404,7 @@ window.onCharClick=function(){
   if(inAction)return;
   inAction=true;clearBubble();
   cstate='petting';setImg('taskdone');applyState();
-  spawnFloat('💕');
+  spawnFloat('+Love');
   setTimeout(function(){inAction=false;startContextWalk();},1800);
 };
 
@@ -531,7 +445,7 @@ function updateBubblePos(){
   if(!bub.classList.contains('visible'))return;
   var bw=bub.offsetWidth||90;
   var left=charX+charW/2-bw/2;
-  left=Math.max(8,Math.min(left,window.innerWidth-bw-8));
+  left=Math.max(8,Math.min(left,stageW()-bw-8));
   bub.style.left=left+'px';
   bub.style.bottom=(GROUND_H+charH+22)+'px';
 }
@@ -542,43 +456,44 @@ window.doSnack=function(){
   rewards--;save();updateUI();
   inAction=true;clearBubble();wake();
   cstate='eating';setImg('taskdone');applyState();
-  spawnFloat(CHARS[sel].ri);
+  spawnFloat('+1 '+CHARS[sel].rl);
   setTimeout(function(){inAction=false;startContextWalk();},2200);
 };
 window.doPet=function(){
   if(inAction)return;
   inAction=true;clearBubble();wake();
   cstate='petting';setImg('taskdone');applyState();
-  spawnFloat('💕');
+  spawnFloat('+Love');
   setTimeout(function(){inAction=false;startContextWalk();},2800);
 };
 window.doPlay=function(){
   if(inAction)return;
   inAction=true;clearBubble();wake();
   cstate='playing';setImg('celebrate');applyState();
-  spawnFloat(CHARS[sel].yi);
+  spawnFloat(CHARS[sel].yl+'!');
   setTimeout(function(){inAction=false;startContextWalk();},2400);
 };
 
 /* ── spawners ───────────────────────────────────────────────── */
 function spawnFloat(e){
+  var stage=document.getElementById('char-stage');
   var el=document.createElement('div');el.className='float-el';el.textContent=e;
   el.style.left=(charX+Math.random()*charW*.6+charW*.2)+'px';
   el.style.bottom=(GROUND_H+charH*.35+Math.random()*24)+'px';
-  document.body.appendChild(el);
+  (stage||document.body).appendChild(el);
   setTimeout(function(){el.remove();},1500);
 }
 function spawnZzz(){
   removeZzz();
+  var stage=document.getElementById('char-stage');
   var z=document.createElement('div');z.className='zzz-el';z.textContent='z z z';
   z.style.left=(charX+charW*.58)+'px';
   z.style.bottom=(GROUND_H+charH*.72)+'px';
-  document.body.appendChild(z);
+  (stage||document.body).appendChild(z);
 }
 
 /* ── panel ──────────────────────────────────────────────────── */
-window.openPanel =function(){document.getElementById('todo-panel').classList.remove('hidden');document.getElementById('panel-btn').classList.remove('show');};
-window.closePanel=function(){document.getElementById('todo-panel').classList.add('hidden');document.getElementById('panel-btn').classList.add('show');};
+window.openPanel=window.closePanel=function(){};
 
 /* ── tasks ──────────────────────────────────────────────────── */
 window.addTask=function(){
@@ -611,7 +526,7 @@ function onTaskDone(){
   inAction=true;clearBubble();stopWalk();
   var allDone=tasks.length>0&&tasks.filter(function(t){return !t.done;}).length===0;
   cstate='taskdone';setImg(allDone?'celebrate':'taskdone');applyState();
-  spawnFloat(CHARS[sel].ri);spawnFloat('⭐');
+  spawnFloat('+1 '+CHARS[sel].rl);spawnFloat(allDone?'All done!':'Nice!');
   setTimeout(function(){
     inAction=false;
     if(allDone)appMode='neutral';
@@ -647,7 +562,7 @@ function renderTasks(){
   var l=document.getElementById('task-list');if(!l)return;
   if(!tasks.length){l.innerHTML='<div class="empty-state">No tasks yet — add one above!</div>';return;}
   l.innerHTML=tasks.map(function(t){
-    var tag=t.tag!=='none'?'<span class="task-tag">'+(t.tag==='walk'?'🐾 Walk':'🍃 Feed')+'</span>':'';
+    var tag=t.tag!=='none'?'<span class="task-tag">'+(t.tag==='walk'?'Walk':'Feed')+'</span>':'';
     return '<div class="task-item'+(t.done?' done':'')+'">'+
       '<input type="checkbox" class="task-cb"'+(t.done?' checked':'')+' onchange="toggleTask('+t.id+')">'+
       '<span class="task-txt">'+esc(t.text)+'</span>'+tag+
@@ -664,6 +579,7 @@ function updateUI(){
 window.addEventListener('resize',function(){charX=Math.min(charX,maxX());});
 
 init();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
 })();
 </script>
 </body>

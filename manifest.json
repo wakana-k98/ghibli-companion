@@ -1,0 +1,25 @@
+{
+  "name": "Ghibli Companion",
+  "short_name": "Companion",
+  "description": "A Ghibli-themed to-do list with an animated companion",
+  "start_url": "./pup-todo.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#E8F2DE",
+  "theme_color": "#527848",
+  "icons": [
+    {
+      "src": "totoroneutral.png",
+      "sizes": "184x155",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "totorojump.png",
+      "sizes": "180x155",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
