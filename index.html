@@ -40,6 +40,7 @@ body[data-char="jiji"]  {--acc:#7060A0;--acc2:#A090C8;--txt:#1A1828;--sub:#6050A
 
 /* ─── CHARACTER (roams inside stage) ────────────────────────────── */
 #char-pos{position:absolute;bottom:10px;left:0;cursor:pointer;z-index:10;}
+#char-img{object-fit:contain;}
 #char-inner{display:flex;flex-direction:column;align-items:center;transform-origin:bottom center;}
 #char-flip{transform-origin:center bottom;display:flex;flex-direction:column;align-items:center;}
 #char-flip.facing-left{transform:scaleX(-1);}
@@ -239,12 +240,18 @@ body[data-char="jiji"]   .walking #char-inner{animation:jiji-trot .40s ease-in-o
 var CHARS = {
   totoro:{title:"Totoro's To-Do",rl:'Snack',pl:'Pat',yl:'Roar',tl:'Acorns:',speed:.55,ws:'.46s',
     img:{neutral:'totoroneutral.png',waiting:'totorostare.png',greeting:'totorohai.png',taskdone:'totoroexcited.png',celebrate:'totorojump.png',idle:'totoroneutral.png',sleeping:'totoroneutral.png'},
+    walkFrames:['totoroneutral.png','totoroexcited.png'],
+    celebFrames:['totorojump.png','totoroexcited.png'],
     bubbles:["Any updates?","Pssst… tasks?","Still waiting…","I'm watching.","How's the list?"]},
   chibi:{title:"Chibi's To-Do",rl:'Treat',pl:'Hug',yl:'Hop',tl:'Treats:',speed:.70,ws:'.52s',
     img:{neutral:'duckneurtral.png',waiting:'duckcry.png',greeting:'duckhi.png',taskdone:'duckhappy.png',celebrate:'duckhappy.png',idle:'duckgoingtosleep.png',sleeping:'ducksleep.png'},
+    walkFrames:['duckneurtral.png','duckhappy.png'],
+    celebFrames:['duckhappy.png','duckhi.png'],
     bubbles:["please…","any progress?","still nothing…","hello??","don't forget me"]},
   jiji:{title:"Jiji's To-Do",rl:'Fish',pl:'Pet',yl:'Magic',tl:'Fish:',speed:.62,ws:'.40s',
     img:{neutral:'jijineutral.png',waiting:'jijiannoyed.png',greeting:'jijiwaiting.png',taskdone:'jijihappy.png',celebrate:'jijihappy.png',idle:'jijisleepy.png',sleeping:'jijisleepy.png'},
+    walkFrames:['jijineutral.png','jijiwaiting.png'],
+    celebFrames:['jijihappy.png','jijiwaiting.png'],
     bubbles:["...well?","still nothing.","I'm waiting.","*stares*","tasks exist. do them."]}
 };
 
@@ -263,7 +270,7 @@ var GROUND_H = 10;
 var sel=null,tasks=[],rewards=0,walkPct=0,feedPct=0;
 var cstate='walking',appMode='neutral';
 var charX=200,dir=1,charW=150,charH=150;
-var rafId=null,idleT=null,deepT=null,bubbleT=null,bubbleHideT=null,blinkT=null;
+var rafId=null,idleT=null,deepT=null,bubbleT=null,bubbleHideT=null,blinkT=null,frameT=null,frameIdx=0;
 var inAction=false;
 
 function preload(){Object.keys(DIMS).forEach(function(f){var i=new Image();i.src=f;});}
@@ -344,6 +351,7 @@ function showGreeting(){
 
 /* ── image ──────────────────────────────────────────────────── */
 function setImg(mode){
+  stopFrameAnim();
   var fn=CHARS[sel].img[mode]||CHARS[sel].img.neutral;
   var d=DIMS[fn]||{w:150,h:150};
   var img=document.getElementById('char-img');
@@ -351,6 +359,24 @@ function setImg(mode){
   document.getElementById('char-pos').style.width=d.w+'px';
   charW=d.w;charH=d.h;
   updateShadow();
+}
+
+/* ── frame animation ────────────────────────────────────────── */
+function startFrameAnim(frames,fps){
+  stopFrameAnim();
+  if(!frames||frames.length<2)return;
+  frameIdx=0;
+  var ms=Math.round(1000/(fps||3));
+  function tick(){
+    document.getElementById('char-img').src=frames[frameIdx%frames.length];
+    frameIdx++;
+    frameT=setTimeout(tick,ms);
+  }
+  tick();
+}
+function stopFrameAnim(){
+  if(frameT){clearTimeout(frameT);frameT=null;}
+  frameIdx=0;
 }
 
 /* ── walk engine ────────────────────────────────────────────── */
@@ -373,8 +399,12 @@ function step(){
   updateBubblePos();updateShadow();
   rafId=requestAnimationFrame(step);
 }
-function startWalk(){stopWalk();cstate='walking';applyState();rafId=requestAnimationFrame(step);resetIdle();}
-function stopWalk(){if(rafId){cancelAnimationFrame(rafId);rafId=null;}}
+function startWalk(){
+  stopWalk();cstate='walking';applyState();
+  rafId=requestAnimationFrame(step);resetIdle();
+  startFrameAnim(CHARS[sel]&&CHARS[sel].walkFrames,3);
+}
+function stopWalk(){if(rafId){cancelAnimationFrame(rafId);rafId=null;}stopFrameAnim();}
 function stopAll(){stopWalk();clearIdle();clearBubble();clearTimeout(blinkT);}
 function resetIdle(){clearIdle();idleT=setTimeout(goIdle,40000);deepT=setTimeout(goDeepSleep,65000);}
 function clearIdle(){clearTimeout(idleT);clearTimeout(deepT);idleT=deepT=null;removeZzz();}
@@ -526,6 +556,7 @@ function onTaskDone(){
   inAction=true;clearBubble();stopWalk();
   var allDone=tasks.length>0&&tasks.filter(function(t){return !t.done;}).length===0;
   cstate='taskdone';setImg(allDone?'celebrate':'taskdone');applyState();
+  if(allDone)startFrameAnim(CHARS[sel].celebFrames,4);
   spawnFloat('+1 '+CHARS[sel].rl);spawnFloat(allDone?'All done!':'Nice!');
   setTimeout(function(){
     inAction=false;
